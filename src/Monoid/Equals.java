@@ -4,9 +4,10 @@ import Language.DIA;
 
 import java.util.*;
 
-import static Monoid.DClassDecom.*;
+import static Monoid.Submonoid.*;
 
 public class Equals {
+    //--vielleicht unnötig
     public static List<String> removeUnique(List<String> relations){
         List<String> result=new ArrayList<>();
         while(relations.size()>2){
@@ -25,61 +26,25 @@ public class Equals {
         return result;
     }
 
-    //Returns a word in which all key entries in "equal" were replaced with its value entries
-    private static EqualList removeEqual(EqualList equal, String key, String value){
-        EqualList result=new EqualList();
-        EqualList temp=new EqualList();
-        for(int i=0;i<equal.Size();i++){
-            temp.add(equal.getKey().get(i).replaceAll(key,value),equal.getValue().get(i).replaceAll(key,value));
-        }
-        for(int i=0;i<temp.Size();i++){
-            if(!temp.getKey().get(i).equalsIgnoreCase(temp.getValue().get(i))){
-                result.add(temp.getKey().get(i),temp.getValue().get(i));
-            }
-        }
-        return result;
-    }
-
-    //alte Version
-    //returns a List with entries of words that can be interchanged in the DIA "dia" at same entry position
-    //--macLength: the maximum length of the words
-    /*public static EqualList findEqual(DIA dia, int maxLength){
-        List<String> submonoid = convertAlphabet(dia,maxLength);
-        List<String> allIdempotent;
-        EqualList result =new EqualList(new ArrayList<>(),new ArrayList<>());
-        String currentKey;
-        for(int i=0;i< submonoid.size();i++){
-            currentKey=submonoid.get(i);
-            allIdempotent=findIdempotents(dia,submonoid,currentKey);
-            for(String element:allIdempotent){
-                result.add(currentKey+ element,currentKey);
-            }
-        }
-        result=clearUnnecessaryEquals(result);
-        return result;
-    }*/
-
     //returns a List with entries of words that can be interchanged in the DIA "dia" at same entry position
     //--macLength: the maximum length of the words
     public static EqualList findEqual(DIA dia, int maxLength){
         List<String> submonoid = convertAlphabet(dia,maxLength);
         List<String> allIdempotent;
-        EqualList result =new EqualList(new ArrayList<>(),new ArrayList<>());
+        EqualList result =new EqualList();
         String currentKey;
-        for(int i=0;i< submonoid.size();i++){
+        for(int i=0;i<submonoid.size();i++){
             currentKey=submonoid.get(i);
             allIdempotent=findIdempotents(dia,submonoid,currentKey);
             for(String element:allIdempotent){
                 result.add(currentKey+ element,currentKey);
             }
         }
-        for (int i=0;i<result.Size();i++){
-            result=clearUnnecessaryEquals(result);
-        }
+        result=clearUnnecessaryEquals(result,4);
         return result;
     }
 
-    //--vielleicht unnötig
+    //Displays the monoid
     public static void DisplayMonoid(List<String> monoid){
         for(int i=0;i< monoid.size();i++){
             System.out.print("["+monoid.get(i)+"]");
@@ -98,8 +63,9 @@ public class Equals {
     }
 
     //Removes obsolet entries in EqualList "equal"
-    //work in Progress
-    private static EqualList clearUnnecessaryEquals(EqualList equal){
+    //the function has to eventually repeated multiple times to be return the correct value
+    //--times defines how often that has to be
+    private static EqualList clearUnnecessaryEquals(EqualList equal, int times){
         EqualList result= new EqualList(new ArrayList<>(),new ArrayList<>());
         String firstKey, firstValue;
         while(!equal.isEmpty()){
@@ -109,16 +75,34 @@ public class Equals {
             equal.remove(0);
             equal=removeEqual(equal,firstKey,firstValue);
         }
-        return reverseMap(result);
+        if(times<=1){
+            return result;
+        }
+        return clearUnnecessaryEquals(reverseMap(result),times-1);
     }
 
-    private static EqualList reverseMap(EqualList map){
+    //Returns a word in which all key entries in "equal" were replaced with its value entries
+    private static EqualList removeEqual(EqualList equal, String key, String value){
+        EqualList result=new EqualList();
+        EqualList temp=new EqualList();
+        for(int i=0;i<equal.Size();i++){
+            temp.add(equal.getKey().get(i).replaceAll(key,value),equal.getValue().get(i).replaceAll(key,value));
+        }
+        for(int i=0;i<temp.Size();i++){
+            if(!temp.getKey().get(i).equalsIgnoreCase(temp.getValue().get(i))){
+                result.add(temp.getKey().get(i),temp.getValue().get(i));
+            }
+        }
+        return result;
+    }
+
+    private static EqualList reverseMap(EqualList equalList){
         EqualList result= new EqualList(new ArrayList<>(),new ArrayList<>());
         String firstKey, firstValue;
-        while(!map.isEmpty()){
-            firstKey=map.getKey().get(map.getKey().size()-1);
-            firstValue=map.getValue().get(map.getKey().size()-1);
-            map.remove(map.getKey().size()-1);
+        while(!equalList.isEmpty()){
+            firstKey=equalList.getKey().get(equalList.getKey().size()-1);
+            firstValue=equalList.getValue().get(equalList.getKey().size()-1);
+            equalList.remove(equalList.getKey().size()-1);
             result.add(firstKey,firstValue);
         }
         return result;

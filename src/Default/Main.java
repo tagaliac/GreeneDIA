@@ -15,7 +15,7 @@ public class Main {
         DIA Hand = createHAnd(15,15);
         DIA Hor = createHOr(15,15);
 
-        EqualList equal=Equals.findEqual(Dyck,6);
+        EqualList equal=Equals.findEqual(Hor,6);
         for (int i=0;i<equal.getKey().size();i++){
             equal.display(i);
         }
