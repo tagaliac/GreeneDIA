@@ -71,8 +71,13 @@ public class EqualList {
         return !(this.Size()>0);
     }
 
-    //Displays all entries
+    //Displays the entry at position
     public void display(int position){
         System.out.print("("+key.get(position)+"/"+value.get(position)+")\n");
+    }
+
+    //Returns the entry at position
+    public String getEntry (int position){
+        return "("+key.get(position)+"/"+value.get(position)+")";
     }
 }

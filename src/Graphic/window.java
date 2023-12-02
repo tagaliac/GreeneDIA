@@ -1,57 +1,67 @@
 package Graphic;
 
-/*
+import Language.DIA;
+import Monoid.EqualList;
+import Monoid.Equals;
+
 import java.awt.Color;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
-import Action.*;
 
 public class window {
-    public static JFrame bild=new JFrame("TicTacToe");
-    public static int width=700,height=700,xoff=200,yoff=200,gewinner=0;
-    public static boolean playerO=false;
-    public static JButton btn[]=new JButton[9];
-    public static int state[]=new int[9];
+    public static JFrame bild=new JFrame("GreeneDIA");
+    public static int width=700,height=700,xoff=100,yoff=100;
+    public static JButton[] btn=new JButton[5];
+    private static JTextArea textArea=new JTextArea();
+    private static final String[] dea_dia = new String[4];
+    private static int answerChoosingAutomata;
+    private static EqualList equal;
 
-    public static void setFenster() {
+    public static void setWindow(DIA[] dias,int maxlength) {
+        dea_dia[0] = "Dyck";
+        dea_dia[1] = "Dyck Plus";
+        dea_dia[2] = "H And";
+        dea_dia[3] = "H Or";
+
         bild.setSize(width, height);
         bild.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        bild.getContentPane().setBackground(new Color(0,0,255));
+        bild.getContentPane().setBackground(new Color(0,255,0));
         bild.setLayout(null);
         bild.setLocationRelativeTo(null);
 
-        for (int i=0;i<btn.length;i++) {
-            btn[i]=new JButton();
-            btn[i].setVisible(true);
-            btn[i].addActionListener(new ActionHandler());
-            btn[i].setContentAreaFilled(false);
-            btn[i].setFocusPainted(false);
-            btn[i].setBorder(null);
+        for(int i=0;i<dea_dia.length;i++){
+            btn[i]=new JButton(dea_dia[i]);
+            btn[i].setBounds(xoff+i*(width-2*xoff)/dea_dia.length,yoff,(width-2*xoff)/dea_dia.length,50);
+            setActionListener(i);
             bild.add(btn[i]);
         }
-        Place.place();
 
-        JButton kallll=new JButton("Reset");
-        kallll.setVisible(true);
-        kallll.setBounds(xoff+310,yoff+200,150,50);
-        kallll.setBackground(new Color(255,0,0));
-        kallll.setForeground(Color.white);
-        kallll.setContentAreaFilled(true);
-        kallll.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Neu.reset();
+        btn[dea_dia.length]=new JButton("calculate");
+        btn[dea_dia.length].setBounds(width/2-50,yoff+50,100,50);
+        btn[dea_dia.length].addActionListener(e -> {
+            equal= Equals.findEqual(dias[answerChoosingAutomata],maxlength);
+            textArea.setText("");
+            for(int i=0;i<equal.Size();i++) {
+                textArea.append(equal.getEntry(i) + "\n");
             }
-
         });
-        bild.add(kallll);
+        textArea.setBounds(width/2-150,yoff+100,300,200);
+        bild.add(textArea);
+        bild.add(btn[dea_dia.length]);
 
-        Draw g = new Draw();
-        g.setBounds(0, 0, width, height);
-        g.setVisible(true);
-        bild.add(g);
+        Draw draw = new Draw();
+        draw.setBounds(0,0,width,height);
+        draw.setVisible(true);
+        bild.add(draw);
 
         bild.setVisible(true);
     }
-}*/
+
+
+    private static void setActionListener(int choice){
+        btn[choice].addActionListener(e -> {
+            answerChoosingAutomata=choice;
+        });
+    }
+}

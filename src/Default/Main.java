@@ -1,5 +1,7 @@
 package Default;
 
+import Graphic.Draw;
+import Graphic.window;
 import Language.*;
 import Monoid.*;
 import Monoid.Equals;
@@ -10,18 +12,26 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args){
-        DIA Dyck = createDyck(15);
-        DIA Dyckplus = createDyckPlus(10);
-        DIA Hand = createHAnd(15,15);
-        DIA Hor = createHOr(15,15);
+        DIA[] dias = new DIA[4];
+        //DEA TestDEA = createFiniteTestDEA();
+        dias[0] = createDyck(15);
+        dias[1] = createDyckPlus(10);
+        dias[2] = createHAnd(15,15);
+        dias[3] = createHOr(15,15);
 
-        EqualList equal=Equals.findEqual(Hor,6);
+
+
+        window.setWindow(dias,6);
+
+        /*EqualList equal=Equals.findEqual(dias[answerChoosingAutomata],6);
         for (int i=0;i<equal.getKey().size();i++){
             equal.display(i);
-        }
+        }*/
+
+
     }
 
-    private static Tabelle createFiniteTestDEA(){
+    private static DEA createFiniteTestDEA(){
         List<Character> alphabet = new ArrayList<>();
         List<state> states = new ArrayList<>();
         List<TransferFunction> transferFunctions = new ArrayList<>();
@@ -64,12 +74,7 @@ public class Main {
         finalstates.add(3);
 
         //define dea
-        DEA dea = new DEA(3, alphabet, transferFunctions, 0, finalstates);
-        System.out.println(dea.acceptWord("ab"));//true
-        System.out.println(dea.acceptWord("bb"));//false
-        System.out.println(dea.acceptWord("bbb"));//false
-        System.out.println(dea.acceptWord(""));//false
-        return new Tabelle(dea);
+        return new DEA(3, alphabet, transferFunctions, 0, finalstates);
     }
 
     private static DIA createDyck(int length) {
