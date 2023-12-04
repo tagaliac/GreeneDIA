@@ -109,6 +109,28 @@ public class Submonoid {
         return result;
     }
 
+    //Returns a List of Idempotents of "DIA" in "submonoid" that can be interchanged with "endWord"
+    public static List<String> findIdempotentsBack(DIA dia, List<String> submonoid, String endWord){
+        Transition transition;
+        List<String> result=new ArrayList<>();
+        Transition compare = dia.getTransitionWithString(endWord);
+        boolean isIdempotent;
+        for (int i=1;i<submonoid.size();i++){
+            transition=dia.getTransitionWithString(submonoid.get(i)+endWord);
+            isIdempotent=((transition.getImage().length-transition.getInfiniteCases().size())>0);
+            for(int j=0;j<transition.getImage().length;j++){
+                if((transition.getImage()[j]!=-1)&&(compare.getImage()[j]!=-1)
+                        &&(transition.getImage()[j]!=compare.getImage()[j])){
+                    isIdempotent=false;
+                }
+            }
+            if(isIdempotent){
+                result.add(submonoid.get(i));
+            }
+        }
+        return result;
+    }
+
 
     //vielleicht unnötig
 
@@ -167,9 +189,12 @@ public class Submonoid {
     }
 
     // returns the subsequence of the word "value" in ["Start";"End"]
-    private static String Subsequence(String value, int Start, int End){
-        if(End<=Start){
+    public static String Subsequence(String value, int Start, int End){
+        if(End<Start){
             throw new IndexOutOfBoundsException("Start must be smaller than End");
+        }
+        if(End==Start){
+            return "";
         }
         Character[] characters=new Character[value.length()];
         for(int i=0;i<value.length();i++){

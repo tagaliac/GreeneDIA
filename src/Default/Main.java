@@ -23,12 +23,6 @@ public class Main {
 
         window.setWindow(dias,6);
 
-        /*EqualList equal=Equals.findEqual(dias[answerChoosingAutomata],6);
-        for (int i=0;i<equal.getKey().size();i++){
-            equal.display(i);
-        }*/
-
-
     }
 
     private static DEA createFiniteTestDEA(){

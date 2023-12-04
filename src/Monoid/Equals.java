@@ -31,17 +31,28 @@ public class Equals {
     public static EqualList findEqual(DIA dia, int maxLength){
         List<String> submonoid = convertAlphabet(dia,maxLength);
         List<String> allIdempotent;
-        EqualList result =new EqualList();
+        EqualList resultF =new EqualList();
+        EqualList resultB =new EqualList();
         String currentKey;
         for(int i=0;i<submonoid.size();i++){
             currentKey=submonoid.get(i);
             allIdempotent=findIdempotents(dia,submonoid,currentKey);
             for(String element:allIdempotent){
-                result.add(currentKey+ element,currentKey);
+                resultF.add(currentKey+ element,currentKey);
             }
         }
-        result=clearUnnecessaryEquals(result,4);
-        return result;
+        resultF=clearUnnecessaryEquals(resultF, 4);
+        for(int i=0;i<submonoid.size();i++){
+            currentKey=submonoid.get(i);
+            allIdempotent=findIdempotentsBack(dia,submonoid,currentKey);
+            for(String element:allIdempotent){
+                resultB.add(element+currentKey,currentKey);
+            }
+        }
+        resultB=clearUnnecessaryEquals(resultB, 4);
+        resultF.append(resultB);
+        resultF=clearUnnecessaryEquals(resultF, 2);
+        return resultF;
     }
 
     //Displays the monoid
@@ -52,7 +63,7 @@ public class Equals {
     }
 
     // Returns a List of all alphabet permutations of "dia" with maximum Length "maxLength"
-    private static List<String> convertAlphabet(DIA dia, int maxLength){
+    public static List<String> convertAlphabet(DIA dia, int maxLength){
         List<String> result =new ArrayList<>();
         String[] array =createSubmonoid(dia.getAlphabet(),maxLength);
         for(int i=0;i<array.length;i++){
@@ -73,7 +84,9 @@ public class Equals {
             firstValue=equal.getValue().get(0);
             result.add(firstKey,firstValue);
             equal.remove(0);
-            equal=removeEqual(equal,firstKey,firstValue);
+            if(firstKey.length()>firstValue.length()){
+                equal=removeEqual(equal,firstKey,firstValue);
+            }
         }
         if(times<=1){
             return result;

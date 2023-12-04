@@ -80,4 +80,11 @@ public class EqualList {
     public String getEntry (int position){
         return "("+key.get(position)+"/"+value.get(position)+")";
     }
+
+    //Append "equalList"
+    public void append(EqualList equalList){
+        for(int i=0;i<equalList.Size();i++){
+            this.add(equalList.getKey().get(i),equalList.getValue().get(i));
+        }
+    }
 }

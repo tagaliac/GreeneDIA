@@ -3,6 +3,7 @@ package Graphic;
 import Language.DIA;
 import Monoid.EqualList;
 import Monoid.Equals;
+import Monoid.GreensRelation;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -12,11 +13,12 @@ import javax.swing.*;
 public class window {
     public static JFrame bild=new JFrame("GreeneDIA");
     public static int width=700,height=700,xoff=100,yoff=100;
-    public static JButton[] btn=new JButton[5];
+    public static JButton[] btn=new JButton[6];
     private static JTextArea textArea=new JTextArea();
     private static final String[] dea_dia = new String[4];
     private static int answerChoosingAutomata;
     private static EqualList equal;
+    private static String[][] box;
 
     public static void setWindow(DIA[] dias,int maxlength) {
         dea_dia[0] = "Dyck";
@@ -37,17 +39,31 @@ public class window {
             bild.add(btn[i]);
         }
 
-        btn[dea_dia.length]=new JButton("calculate");
-        btn[dea_dia.length].setBounds(width/2-50,yoff+50,100,50);
-        btn[dea_dia.length].addActionListener(e -> {
+        btn[dea_dia.length-1]=new JButton("equals");
+        btn[dea_dia.length-1].setBounds(width/2-100,yoff+50,100,50);
+        btn[dea_dia.length-1].addActionListener(e -> {
             equal= Equals.findEqual(dias[answerChoosingAutomata],maxlength);
             textArea.setText("");
             for(int i=0;i<equal.Size();i++) {
                 textArea.append(equal.getEntry(i) + "\n");
             }
         });
-        textArea.setBounds(width/2-150,yoff+100,300,200);
+        textArea.setBounds(width/2-150,yoff+100,300,400);
         bild.add(textArea);
+        bild.add(btn[dea_dia.length-1]);
+
+        btn[dea_dia.length]=new JButton("Box");
+        btn[dea_dia.length].setBounds(width/2,yoff+50,100,50);
+        btn[dea_dia.length].addActionListener(e -> {
+            box= GreensRelation.getGreenBox(dias[answerChoosingAutomata],maxlength);
+            textArea.setText("");
+            for(int i=0;i<box.length;i++) {
+                for (int j=0;j<box[i].length;j++){
+                    textArea.append(box[i][j] + " ");
+                }
+                textArea.append("\n");
+            }
+        });
         bild.add(btn[dea_dia.length]);
 
         Draw draw = new Draw();
