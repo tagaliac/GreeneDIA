@@ -19,13 +19,11 @@ public class Main {
         dias[2] = createHAnd(15,15);
         dias[3] = createHOr(15,15);
 
-
-
-        window.setWindow(dias,6);
+        window.setWindow();
 
     }
 
-    private static DEA createFiniteTestDEA(){
+    public static DEA createFiniteTestDEA(){
         List<Character> alphabet = new ArrayList<>();
         List<state> states = new ArrayList<>();
         List<TransferFunction> transferFunctions = new ArrayList<>();
@@ -71,7 +69,7 @@ public class Main {
         return new DEA(3, alphabet, transferFunctions, 0, finalstates);
     }
 
-    private static DIA createDyck(int length) {
+    public static DIA createDyck(int length) {
         List<Character> alphabet = new ArrayList<>();
         List<TransferFunction> transferFunctions = new ArrayList<>();
         List<Integer> finalstates = new ArrayList<>();
@@ -101,7 +99,7 @@ public class Main {
     }
 
 
-    private static DIA createDyckPlus(int length){
+    public static DIA createDyckPlus(int length){
         if(length<3){
             throw new IndexOutOfBoundsException("length must be 3 or higher");
         }
@@ -146,7 +144,7 @@ public class Main {
         return new DIA(length+3,alphabet,transferFunctions,1,finalstates,InfiniteStates);
     }
 
-    private static DIA createHAnd(int length1,int length2){
+    public static DIA createHAnd(int length1,int length2){
         if(length1<3||length2<3){
             throw new IndexOutOfBoundsException("length1 and length2 must be 3 or higher");
         }
@@ -215,7 +213,7 @@ public class Main {
         return new DIA(length1*length2+2, alphabet, transferFunctions, 1, finalstates,InfinitieStates);
     }
 
-    private static DIA createHOr(int length1,int length2){
+    public static DIA createHOr(int length1,int length2){
         if(length1<3||length2<3){
             throw new IndexOutOfBoundsException("length1 and length2 must be 3 or higher");
         }
@@ -286,7 +284,7 @@ public class Main {
         return new DIA(length1*length2+3, alphabet, transferFunctions, 1, finalstates,InfinitieStates);
     }
 
-    private static void PrintList(List<String> StringList,int valuesInLine){
+    public static void PrintList(List<String> StringList,int valuesInLine){
         int count=0;
         for(int i=0;i<StringList.size();i++){
             System.out.print(StringList.get(i));

@@ -12,7 +12,7 @@ public class GreensRelation {
             String result="";
             for (int i=0;i<value.length();i++){
                 letter=value.charAt(i);
-                result=letter+result; //adds each character in front of the existing string
+                result=letter+result;
             }
             return result;
         }catch (NullPointerException e){
@@ -48,14 +48,8 @@ public class GreensRelation {
         }
         String reducedWord;
         for(int i=w2.length()-1;i>=0;i--){
-            if(element.equalsIgnoreCase("aa")&&compare.equalsIgnoreCase("a")){
-                System.out.println("");
-            }
             for(int e=0;e<equalList.Size();e++){
                 reducedWord=ReduceWordR(w2,equalList.getKey().get(e),equalList.getValue().get(e),i);
-                if(element.equalsIgnoreCase("aa")&&compare.equalsIgnoreCase("a")){
-                    System.out.println(reducedWord);
-                }
                 if(reducedWord!=null&&reducedWord.length()<=w2.length()){
                     w2=reducedWord;
                     if(w2.equalsIgnoreCase(w1)){
@@ -72,9 +66,6 @@ public class GreensRelation {
         }
         for(int e=0;e<equalList.Size();e++){
             reducedWord=ReduceWordR(w2,equalList.getKey().get(e),equalList.getValue().get(e),0);
-            if(element.equalsIgnoreCase("aa")&&compare.equalsIgnoreCase("a")){
-                System.out.println(reducedWord);
-            }
             if(reducedWord!=null&&reducedWord.length()<=w2.length()){
                 w2=reducedWord;
                 if(w2.equalsIgnoreCase(w1)){
@@ -91,12 +82,6 @@ public class GreensRelation {
     }
 
     public static String ReduceWordL(String word,String key,String value,int position){
-        /*if(key.length()-position>=0
-                &&Submonoid.Subsequence(word,0,position).equalsIgnoreCase(
-                        Submonoid.Subsequence(reverseString(key),0,position))){
-            return value+Submonoid.Subsequence(word,position,word.length());
-        }
-        return null;*/
         return reverseString(ReduceWordR(reverseString(word),reverseString(key),reverseString(value),position));
     }
 
@@ -178,8 +163,6 @@ public class GreensRelation {
         }
         result[0][0]="\u03BB";
         fitValuesOfGreenBox(result,maxLength);
-        System.out.println(Rlist);
-        System.out.println(Llist);
         return reduceSizeOfGreenBox(result, Rlist.size(), Llist.size());
     }
 
