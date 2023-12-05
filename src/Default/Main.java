@@ -283,12 +283,7 @@ public class Main {
         finalstates.add(2);
 
         //define dea
-        DIA dia = new DIA(length1*length2+3, alphabet, transferFunctions, 1, finalstates,InfinitieStates);
-        System.out.println(dia.acceptWord("aababb"));//true
-        System.out.println(dia.acceptWord("abab"));//false
-        System.out.println(dia.acceptWord("aabb"));//true
-
-        return dia;
+        return new DIA(length1*length2+3, alphabet, transferFunctions, 1, finalstates,InfinitieStates);
     }
 
     private static void PrintList(List<String> StringList,int valuesInLine){

@@ -48,7 +48,7 @@ public class window {
                 textArea.append(equal.getEntry(i) + "\n");
             }
         });
-        textArea.setBounds(width/2-150,yoff+100,300,400);
+        textArea.setBounds(xoff,yoff+100,width-2*xoff,height-2*yoff-100);
         bild.add(textArea);
         bild.add(btn[dea_dia.length-1]);
 

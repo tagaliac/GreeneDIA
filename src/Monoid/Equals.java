@@ -52,7 +52,8 @@ public class Equals {
         resultB=clearUnnecessaryEquals(resultB, 4);
         resultF.append(resultB);
         resultF=clearUnnecessaryEquals(resultF, 2);
-        return resultF;
+        Equals.sortbyValue(resultF);
+        return reverseMap(resultF);
     }
 
     //Displays the monoid
@@ -119,5 +120,30 @@ public class Equals {
             result.add(firstKey,firstValue);
         }
         return result;
+    }
+
+    public static void sortbyValue(EqualList equalList){
+        int i=equalList.Size()-1;
+        int length=equalList.getValue().get(i).length();
+        while(i>0){
+            i--;
+            if(equalList.getValue().get(i).length()<length){
+                equalList.add(equalList.getKey().get(i),equalList.getValue().get(i));
+                equalList.remove(i);
+                i=equalList.Size()-1;
+            }
+            length=equalList.getValue().get(i).length();
+        }
+    }
+
+    private static void Sort(EqualList equalList, int begin, int end){
+        if(end-begin<2){
+            if(equalList.getValue().get(end-begin).length()>equalList.getValue().get(end-begin+1).length()){
+
+            }
+        }
+        int mid=(end-begin)/2+begin;
+        Sort(equalList,begin,mid);
+        Sort(equalList,mid+1,end);
     }
 }
