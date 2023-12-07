@@ -34,8 +34,8 @@ public class GreensRelation {
     }
 
     private static boolean isR_Related(String element, String compare, EqualList equalList){
-        boolean Rleft=false,Rright=false;
-        String w1,w2, reducedWord;;
+        boolean Rleft=false,Rright;
+        String w1,w2;
         if(element.length()<=compare.length()){
             w1=element;
             w2=compare;
@@ -46,69 +46,9 @@ public class GreensRelation {
         if(w1.length()==0||w1.equalsIgnoreCase(Submonoid.Subsequence(w2,0,w1.length()))){
             Rleft=true;
         }else if(w1.length()!=0){
-            for(int i=w1.length()-1;i>=0;i--){
-                for(int e=0;e<equalList.Size();e++){
-                    reducedWord=ReduceWordR(w1,equalList.getKey().get(e),equalList.getValue().get(e),i);
-                    if(reducedWord!=null&&reducedWord.length()<=w1.length()){
-                        w1=reducedWord;
-                        if(w1.equalsIgnoreCase(Submonoid.Subsequence(w2,0,w1.length()))){
-                            Rleft=true;
-                            break;
-                        }
-                        break;
-                    }
-                    if(e==equalList.Size()-1){
-                        break;
-                    }
-                }
-                if(Rleft||w2.length()<w1.length()){break;}
-            }
-            for(int e=0;e<equalList.Size();e++){
-                reducedWord=ReduceWordR(w1,equalList.getKey().get(e),equalList.getValue().get(e),0);
-                if(reducedWord!=null&&reducedWord.length()<=w1.length()){
-                    w1=reducedWord;
-                    if(w1.equalsIgnoreCase(Submonoid.Subsequence(w2,0,w1.length()))){
-                        Rleft=true;
-                        break;
-                    }
-                    break;
-                }
-                if(e==equalList.Size()-1){
-                    break;
-                }
-            }
+            Rleft=Relatible(w1,w2,equalList,true,true);
         }
-        for(int i=w2.length()-1;i>=0;i--){
-            for(int e=0;e<equalList.Size();e++){
-                reducedWord=ReduceWordR(w2,equalList.getKey().get(e),equalList.getValue().get(e),i);
-                if(reducedWord!=null&&reducedWord.length()<=w2.length()){
-                    w2=reducedWord;
-                    if(w2.equalsIgnoreCase(w1)){
-                        Rright=true;
-                        break;
-                    }
-                    break;
-                }
-                if(e==equalList.Size()-1){
-                    break;
-                }
-            }
-            if(Rright||w2.length()<w1.length()){break;}
-        }
-        for(int e=0;e<equalList.Size();e++){
-            reducedWord=ReduceWordR(w2,equalList.getKey().get(e),equalList.getValue().get(e),0);
-            if(reducedWord!=null&&reducedWord.length()<=w2.length()){
-                w2=reducedWord;
-                if(w2.equalsIgnoreCase(w1)){
-                    Rright=true;
-                    break;
-                }
-                break;
-            }
-            if(e==equalList.Size()-1){
-                break;
-            }
-        }
+        Rright=Relatible(w1,w2,equalList,true,false);
         return Rleft&&Rright;
     }
 
@@ -117,8 +57,8 @@ public class GreensRelation {
     }
 
     private static boolean isL_Related(String element, String compare, EqualList equalList){
-        boolean Lleft=false,Lright=false;
-        String w1,w2,reducedWord;
+        boolean Lleft=false,Lright;
+        String w1,w2;
         if(element.length()<=compare.length()){
             w1=element;
             w2=compare;
@@ -129,58 +69,79 @@ public class GreensRelation {
         if(w1.length()==0||reverseString(w1).equalsIgnoreCase(Submonoid.Subsequence(reverseString(w2),0,w1.length()))){
             Lleft=true;
         }else if(w1.length()!=0){
-            for(int i=w1.length()-1;i>=0;i--){
-                for(int e=0;e<equalList.Size();e++){
-                    reducedWord=ReduceWordL(w1,equalList.getKey().get(e),equalList.getValue().get(e),i);
-                    if(reducedWord!=null&&reducedWord.length()<=w1.length()){
-                        w1=reducedWord;
-                        if(reverseString(w1).equalsIgnoreCase(Submonoid.Subsequence(reverseString(w2),0,w1.length()))){
-                            Lleft=true;
+            Lleft=Relatible(w1,w2,equalList,false,true);
+        }
+        Lright=Relatible(w1,w2,equalList,false,false);
+        return Lleft&&Lright;
+    }
+
+    private static boolean Relatible(String w1, String w2, EqualList equalList, boolean isRrelation, boolean isToLeft){
+        String reducedWord;
+        if(isToLeft){
+            String temp=w1;
+            w1=w2;
+            w2=temp;
+        }
+        for(int i=w2.length()-1;i>=0;i--){
+            for(int e=0;e<equalList.Size();e++){
+                if(isRrelation){
+                    reducedWord=ReduceWordR(w2,equalList.getKey().get(e),equalList.getValue().get(e),i);
+                }else{
+                    reducedWord=ReduceWordL(w2,equalList.getKey().get(e),equalList.getValue().get(e),i);
+                }
+                if(reducedWord!=null&&reducedWord.length()<=w2.length()){
+                    w2=reducedWord;
+                    if(isToLeft&&isRrelation){
+                        if(w2.equalsIgnoreCase(Submonoid.Subsequence(w1,0,w2.length()))){
+                            return true;
+                        }
+                        break;
+                    }else if(isToLeft&&!isRrelation){
+                            if(reverseString(w2).equalsIgnoreCase(Submonoid.Subsequence(reverseString(w1),0,w2.length()))) {
+                                return true;
+                            }
                             break;
+                    }else{
+                        if(w2.equalsIgnoreCase(w1)){
+                            return true;
                         }
                         break;
                     }
                 }
-                if(Lleft||w2.length()<w1.length()){break;}
             }
-            for(int e=0;e<equalList.Size();e++){
-                reducedWord=ReduceWordL(w1,equalList.getKey().get(e),equalList.getValue().get(e),0);
-                if(reducedWord!=null&&reducedWord.length()<=w1.length()){
-                    w1=reducedWord;
-                    if(reverseString(w1).equalsIgnoreCase(Submonoid.Subsequence(reverseString(w2),0,w1.length()))){
-                        Lleft=true;
-                        break;
-                    }
-                    break;
-                }
+            if(isToLeft){
+                if(w1.length()<w2.length()){break;}
+            }else{
+                if(w2.length()<w1.length()){break;}
             }
-        }
-        for(int i=w2.length()-1;i>=0;i--){
-            for(int e=0;e<equalList.Size();e++){
-                reducedWord=ReduceWordL(w2,equalList.getKey().get(e),equalList.getValue().get(e),i);
-                if(reducedWord!=null&&reducedWord.length()<=w2.length()){
-                    w2=reducedWord;
-                    if(w2.equalsIgnoreCase(w1)){
-                        Lright=true;
-                        break;
-                    }
-                    break;
-                }
-            }
-            if(Lright||w2.length()<w1.length()){break;}
         }
         for(int e=0;e<equalList.Size();e++){
-            reducedWord=ReduceWordL(w2,equalList.getKey().get(e),equalList.getValue().get(e),0);
-            if(reducedWord!=null&&reducedWord.length()<=w2.length()){
-                w2=reducedWord;
-                if(w2.equalsIgnoreCase(w1)){
-                    Lright=true;
+            if(isRrelation){
+                reducedWord=ReduceWordR(w2,equalList.getKey().get(e),equalList.getValue().get(e),0);
+            }else{
+                reducedWord=ReduceWordL(w2,equalList.getKey().get(e),equalList.getValue().get(e),0);
+            }
+            if(reducedWord!=null&&reducedWord.length()<=w2.length()) {
+                w2 = reducedWord;
+                if (isToLeft && isRrelation) {
+                    if (w2.equalsIgnoreCase(Submonoid.Subsequence(w1, 0, w2.length()))) {
+                        return true;
+                    }
+                    break;
+                } else if (isToLeft && !isRrelation) {
+                    if (reverseString(w2).equalsIgnoreCase(Submonoid.Subsequence(reverseString(w1), 0, w2.length()))) {
+                        return true;
+                    }
+                    break;
+                } else{
+                    if (w2.equalsIgnoreCase(w1)) {
+                        return true;
+                    }
                     break;
                 }
-                break;
             }
         }
-        return Lleft&&Lright;
+        return false;
     }
 
     public static String[][] getGreenBox(DIA dia, int maxLength){
