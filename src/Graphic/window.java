@@ -7,99 +7,103 @@ import Monoid.Equals;
 import Monoid.GreensRelation;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.*;
 
 public class window {
-    public static JFrame bild=new JFrame("GreeneDIA");
+    public static JFrame image=new JFrame("GreeneDIA");
     public static int width=700,height=700,xoff=100,yoff=100;
-    public static JButton[] btn=new JButton[6];
+    public static JButton[] btn=new JButton[7];
     private static JTextArea textArea=new JTextArea();
     private static final String[] dea_dia = new String[4];
     private static DIA[] dias=new DIA[dea_dia.length];
-    private static int answerChoosingAutomata,maxlength=1;
+    private static int answerChoosingAutomata,maxLength;
     private static EqualList equal;
     private static String[][] box;
 
+    private static final int DEFAULT_MAX_LENGTH = 6;
+    private static final int DEFAULT_LENGTH_1 = 15;
+    private static final int DEFAULT_LENGTH_2 = 15;
+
     public static void setWindow() {
+        //set DIAs
         dea_dia[0] = "Dyck";
         dea_dia[1] = "Dyck Plus";
         dea_dia[2] = "H And";
         dea_dia[3] = "H Or";
-        setDIAS(15,15);
+        setDIAS(DEFAULT_LENGTH_1,DEFAULT_LENGTH_2);
 
-        bild.setSize(width, height);
-        bild.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        bild.getContentPane().setBackground(new Color(0,255,0));
-        bild.setLayout(null);
-        bild.setLocationRelativeTo(null);
+        //define image
+        image.setSize(width, height);
+        image.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        image.getContentPane().setBackground(new Color(0,255,0));
+        image.setLayout(null);
+        image.setLocationRelativeTo(null);
 
-        JFormattedTextField input1;
-        JLabel label1 = new JLabel("Maxlength:");
-        input1 = new JFormattedTextField(6);
-        label1.setBounds(width/2-250,yoff+50,80,50);
-        input1.setBounds(width/2-170,yoff+50,70,50);
-        bild.add(input1);
-        bild.add(label1);
+        //set max length input
+        JFormattedTextField inputMaxLength;
+        JLabel labelMaxLength = new JLabel("Maxlength:");
+        inputMaxLength = new JFormattedTextField(DEFAULT_MAX_LENGTH);
+        labelMaxLength.setBounds(width/2-200,yoff+100,100,50);
+        inputMaxLength.setBounds(width/2-100,yoff+100,100,50);
+        image.add(inputMaxLength);
+        image.add(labelMaxLength);
 
-        JFormattedTextField input2;
-        JLabel label2 = new JLabel("First Length:");
-        input2 = new JFormattedTextField(15);
-        label2.setBounds(width/2+100,yoff+50,80,25);
-        input2.setBounds(width/2+170,yoff+50,70,25);
-        bild.add(input2);
-        bild.add(label2);
+        //set first length input
+        JFormattedTextField inputLength1;
+        JLabel labelLength1 = new JLabel("First Length:");
+        inputLength1 = new JFormattedTextField(DEFAULT_LENGTH_1);
+        labelLength1.setBounds(width/2,yoff+100,100,25);
+        inputLength1.setBounds(width/2+100,yoff+100,100,25);
+        image.add(inputLength1);
+        image.add(labelLength1);
 
-        JFormattedTextField input3;
-        JLabel label3 = new JLabel("Second Length:");
-        input3 = new JFormattedTextField(15);
-        label3.setBounds(width/2+100,yoff+75,80,25);
-        input3.setBounds(width/2+170,yoff+75,70,25);
-        bild.add(input3);
-        bild.add(label3);
+        //set second length input
+        JFormattedTextField inputLength2;
+        JLabel labelLength2 = new JLabel("Second Length:");
+        inputLength2 = new JFormattedTextField(DEFAULT_LENGTH_2);
+        labelLength2.setBounds(width/2,yoff+125,100,25);
+        inputLength2.setBounds(width/2+100,yoff+125,100,25);
+        image.add(inputLength2);
+        image.add(labelLength2);
 
+        //set DIA definition buttons
         for(int i=0;i<dea_dia.length;i++){
             btn[i]=new JButton(dea_dia[i]);
             btn[i].setBounds(xoff+i*(width-2*xoff)/dea_dia.length,yoff,(width-2*xoff)/dea_dia.length,50);
-            setActionListener(i);
-            bild.add(btn[i]);
+            setActionDIAButtons(i);
+            image.add(btn[i]);
         }
 
+        //sets scrollbar
         JScrollPane scroll = (new JScrollPane(textArea));
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scroll.setBounds(xoff,yoff+100,width-2*xoff,height-2*yoff-100);
+        scroll.setBounds(xoff,yoff+150,width-2*xoff,height-2*yoff-100);
         textArea.setEditable(true);
-        bild.getContentPane().add(scroll);
+        image.getContentPane().add(scroll);
 
-        btn[dea_dia.length-1]=new JButton("Equals");
-        btn[dea_dia.length-1].setBounds(width/2-100,yoff+50,100,50);
-        btn[dea_dia.length-1].addActionListener(e -> {
-            if((int)input1.getValue()<3){
-                maxlength=3;
-            }else{
-                maxlength=(int)input1.getValue();
-            }
-            setDIAS((int)input2.getValue(),(int)input3.getValue());
-            equal= Equals.findEqual(dias[answerChoosingAutomata],maxlength);
+        //sets equal-button
+        btn[dea_dia.length]=new JButton("Equals");
+        btn[dea_dia.length].setBounds(width/2-200,yoff+50,133,50);
+        btn[dea_dia.length].addActionListener(e -> {
+            setMaxLength((int)inputMaxLength.getValue());
+            setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
+            equal= Equals.findEqual(dias[answerChoosingAutomata],maxLength);
             textArea.setText("");
             for(int i=0;i<equal.Size();i++) {
                 textArea.append(equal.getEntry(i) + "\n");
             }
         });
-        bild.add(btn[dea_dia.length-1]);
+        image.add(btn[dea_dia.length]);
 
-        btn[dea_dia.length]=new JButton("Box");
-        btn[dea_dia.length].setBounds(width/2,yoff+50,100,50);
-        btn[dea_dia.length].addActionListener(e -> {
-            if((int)input1.getValue()<3){
-                maxlength=3;
-            }else{
-                maxlength=(int)input1.getValue();
-            }
-            setDIAS((int)input2.getValue(),(int)input3.getValue());
-            box= GreensRelation.getGreenBox(dias[answerChoosingAutomata],maxlength);
+        //sets box-button
+        btn[dea_dia.length+1]=new JButton("Box");
+        btn[dea_dia.length+1].setBounds(width/2-67,yoff+50,134,50);
+        btn[dea_dia.length+1].addActionListener(e -> {
+            setMaxLength((int)inputMaxLength.getValue());
+            setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
+            box= GreensRelation.getGreenBox(dias[answerChoosingAutomata],maxLength);
             textArea.setColumns(box[0].length);
             textArea.setRows(box.length);
             textArea.setText("");
@@ -110,19 +114,43 @@ public class window {
                 textArea.append("\n");
             }
         });
-        bild.add(btn[dea_dia.length]);
+        image.add(btn[dea_dia.length+1]);
 
+        //sets H-CLass-button
+        btn[dea_dia.length+2]=new JButton("H Class");
+        btn[dea_dia.length+2].setBounds(width/2+67,yoff+50,133,50);
+        btn[dea_dia.length+2].addActionListener(e -> {
+            setMaxLength((int)inputMaxLength.getValue());
+            setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
+            List<List<String>> HClasses=GreensRelation.getHValues(dias[answerChoosingAutomata],maxLength);
+            if(!HClasses.isEmpty()){
+                textArea.setText("");
+                for(List<String> HCLass:HClasses) {
+                    if(HCLass.size()<=1){
+                        continue;
+                    }
+                    for (String element:HCLass){
+                        textArea.append(element+"<->");
+                    }
+                    textArea.append("\n");
+                }
+            }else{
+                textArea.setText("Nothing");
+            }
+        });
+        image.add(btn[dea_dia.length+2]);
 
+        //sets background image
         Draw draw = new Draw();
         draw.setBounds(0,0,width,height);
         draw.setVisible(true);
-        bild.add(draw);
+        image.add(draw);
 
-        bild.setVisible(true);
+        image.setVisible(true);
     }
 
 
-    private static void setActionListener(int choice){
+    private static void setActionDIAButtons(int choice){
         btn[choice].addActionListener(e -> {
             answerChoosingAutomata=choice;
         });
@@ -133,5 +161,13 @@ public class window {
         dias[1]= Main.createDyckPlus(length1);
         dias[2]= Main.createHAnd(length1,length2);
         dias[3]= Main.createHOr(length1,length2);
+    }
+
+    private static void setMaxLength(int value){
+        if(value<3){
+            maxLength=3;
+        }else{
+            maxLength=value;
+        }
     }
 }
