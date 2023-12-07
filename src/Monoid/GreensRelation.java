@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class GreensRelation {
+    //Returns the String "value" in reverse order
     private static String reverseString(String value){
         try{
             char letter;
@@ -22,6 +23,9 @@ public class GreensRelation {
         }
     }
 
+    //Append if possible lettern to word in order to reduce the word throw the equal value
+    //If [0;"position"-1] of the "word" with "key" is possible [0;"position"-1]+"value" will be return
+    //If it is not possible it returns null
     public static String ReduceWordR(String word,String key,String value,int position){
         if(Submonoid.Subsequence(word,position,Math.min(position+key.length(),word.length())).equalsIgnoreCase(
                 Submonoid.Subsequence(key,0,Math.min(key.length(),word.length()-position)))){
@@ -33,9 +37,11 @@ public class GreensRelation {
         return null;
     }
 
+    //checks if the Relation "elementRcompare" is possible with the proper "equalList"
     private static boolean isR_Related(String element, String compare, EqualList equalList){
         boolean Rleft=false,Rright;
         String w1,w2;
+        //w1 has to be the smaller word
         if(element.length()<=compare.length()){
             w1=element;
             w2=compare;
@@ -43,22 +49,27 @@ public class GreensRelation {
             w1=compare;
             w2=element;
         }
+        //checks if x exists in w1+x=w2
         if(w1.length()==0||w1.equalsIgnoreCase(Submonoid.Subsequence(w2,0,w1.length()))){
             Rleft=true;
         }else if(w1.length()!=0){
             Rleft=Relatible(w1,w2,equalList,true,true);
         }
+        //checks if x exists in w2+x=w1
         Rright=Relatible(w1,w2,equalList,true,false);
         return Rleft&&Rright;
     }
 
+    //the same as "ReduceWordR" just with the difference that it checks the beginning of the word
     public static String ReduceWordL(String word,String key,String value,int position){
         return reverseString(ReduceWordR(reverseString(word),reverseString(key),reverseString(value),position));
     }
 
+    //checks if the Relation "elementLcompare" is possible with the proper "equalList"
     private static boolean isL_Related(String element, String compare, EqualList equalList){
         boolean Lleft=false,Lright;
         String w1,w2;
+        //w1 has to be the smaller word
         if(element.length()<=compare.length()){
             w1=element;
             w2=compare;
@@ -66,15 +77,22 @@ public class GreensRelation {
             w1=compare;
             w2=element;
         }
+        //checks if x exists in x+w1=w2
         if(w1.length()==0||reverseString(w1).equalsIgnoreCase(Submonoid.Subsequence(reverseString(w2),0,w1.length()))){
             Lleft=true;
         }else if(w1.length()!=0){
             Lleft=Relatible(w1,w2,equalList,false,true);
         }
+        //checks if x exists in x+w2=w1
         Lright=Relatible(w1,w2,equalList,false,false);
         return Lleft&&Lright;
     }
 
+    //Checks the relation between the smaller word "w1" and the bigger word "w2" with the proper "equalList"
+    //For isRrelation=true and isToLeft=true it checks if x exists in w1+x=w2
+    //For isRrelation=true and isToLeft=false it checks if x exists in w2+x=w1
+    //For isRrelation=false and isToLeft=true it checks if x exists in x+w1=w2
+    //For isRrelation=false and isToLeft=false it checks if x exists in x+w2=w1
     private static boolean Relatible(String w1, String w2, EqualList equalList, boolean isRrelation, boolean isToLeft){
         String reducedWord;
         if(isToLeft){
@@ -96,7 +114,7 @@ public class GreensRelation {
                             return true;
                         }
                         break;
-                    }else if(isToLeft&&!isRrelation){
+                    }else if(isToLeft){
                             if(reverseString(w2).equalsIgnoreCase(Submonoid.Subsequence(reverseString(w1),0,w2.length()))) {
                                 return true;
                             }
@@ -115,6 +133,7 @@ public class GreensRelation {
                 if(w2.length()<w1.length()){break;}
             }
         }
+        //another last check
         for(int e=0;e<equalList.Size();e++){
             if(isRrelation){
                 reducedWord=ReduceWordR(w2,equalList.getKey().get(e),equalList.getValue().get(e),0);
@@ -128,7 +147,7 @@ public class GreensRelation {
                         return true;
                     }
                     break;
-                } else if (isToLeft && !isRrelation) {
+                } else if (isToLeft) {
                     if (reverseString(w2).equalsIgnoreCase(Submonoid.Subsequence(reverseString(w1), 0, w2.length()))) {
                         return true;
                     }
@@ -144,7 +163,10 @@ public class GreensRelation {
         return false;
     }
 
+    //Returns the Green Box of the "dia" with the maximum length "maxLength"
+    //The results are saved as an array-matrix of strings
     public static String[][] getGreenBox(DIA dia, int maxLength){
+        //gets and modifies all important variables
         List<String> submonoid= Equals.convertAlphabet(dia, maxLength);
         Collections.sort(submonoid, new Comparator<String>() {
             @Override
@@ -162,6 +184,7 @@ public class GreensRelation {
         submonoid=removeEqualsFromMonoid(submonoid,equal);
         boolean found;
         int RPos,LPos;
+        //checks for relations and adds them properly
         for(String element:submonoid){
             if(element.equalsIgnoreCase("")||element.equalsIgnoreCase(" ")){
                 continue;
@@ -193,11 +216,13 @@ public class GreensRelation {
             }
             result[RPos][LPos]=element;
         }
+        //fits graphically the result-matrix
         result[0][0]="\u03BB";
         fitValuesOfGreenBox(result,maxLength);
         return reduceSizeOfGreenBox(result, Rlist.size(), Llist.size());
     }
 
+    //Removes all equal values in "equalList" to reduce the size of the "monoid"
     private static List<String> removeEqualsFromMonoid(List<String> monoid,EqualList equalList){
         List<String> result = new ArrayList<>();
         String el,oldEL;
@@ -221,6 +246,7 @@ public class GreensRelation {
         return result;
     }
 
+    //Removes null-entries of "greenbox" with "maxLength" and makes the entries equal long
     private static void fitValuesOfGreenBox(String[][] greenbox, int maxlength){
         for(int i=0;i<greenbox.length;i++){
             for(int j=0;j<greenbox[i].length;j++){
@@ -233,6 +259,7 @@ public class GreensRelation {
         }
     }
 
+    //Cuts the "greenbox" to the defined size
     private static String[][] reduceSizeOfGreenBox(String[][] greenbox, int height, int length){
         String[][] result = new String[height][length];
         for(int i=0;i<result.length;i++){
@@ -243,6 +270,8 @@ public class GreensRelation {
         return result;
     }
 
+    //Returns a list of element that are H-Related
+    //Each element of a sublist ist H-Related to the others
     public static List<List<String>> getHValues(DIA dia, int maxLength){
         List<List<String>> result=new ArrayList<>();
         List<String> submonoid= Equals.convertAlphabet(dia, maxLength);

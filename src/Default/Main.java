@@ -1,11 +1,7 @@
 package Default;
 
-import Graphic.Draw;
 import Graphic.window;
 import Language.*;
-import Monoid.*;
-import Monoid.Equals;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -284,11 +280,13 @@ public class Main {
         return new DIA(length1*length2+3, alphabet, transferFunctions, 1, finalstates,InfinitieStates);
     }
 
-    public static void PrintList(List<String> StringList,int valuesInLine){
+    //Prints the list "stringList" in lines with maximum Size "sizeOfLine"
+    //It exists for testing
+    public static void PrintList(List<String> StringList,int sizeOfLine){
         int count=0;
         for(int i=0;i<StringList.size();i++){
             System.out.print(StringList.get(i));
-            if(count>=valuesInLine){
+            if(count>=sizeOfLine){
                 count=0;
                 System.out.print("\n");
             }else{

@@ -150,12 +150,15 @@ public class window {
     }
 
 
+    //Sets the action of a button
+    //"choice" is needed to define the dia what should be connected with the button
     private static void setActionDIAButtons(int choice){
         btn[choice].addActionListener(e -> {
             answerChoosingAutomata=choice;
         });
     }
 
+    //Defines the DIAs with proper parameters
     private static void setDIAS(int length1, int length2){
         dias[0]= Main.createDyck(length1);
         dias[1]= Main.createDyckPlus(length1);
@@ -163,6 +166,7 @@ public class window {
         dias[3]= Main.createHOr(length1,length2);
     }
 
+    //Sets the maximum Length
     private static void setMaxLength(int value){
         if(value<3){
             maxLength=3;

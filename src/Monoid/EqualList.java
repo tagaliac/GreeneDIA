@@ -2,7 +2,6 @@ package Monoid;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 // creates an equal list that works as a hashtable
 // --key = a set of keys (as Strings)

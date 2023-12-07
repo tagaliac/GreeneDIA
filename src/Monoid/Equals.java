@@ -7,25 +7,6 @@ import java.util.*;
 import static Monoid.Submonoid.*;
 
 public class Equals {
-    //--vielleicht unnötig
-    public static List<String> removeUnique(List<String> relations){
-        List<String> result=new ArrayList<>();
-        while(relations.size()>2){
-            if(!relations.get(0).equalsIgnoreCase(relations.get(1))){
-                result.add(relations.remove(0));
-            }else {
-                relations.remove(0);
-            }
-        }
-        if(!relations.get(0).equalsIgnoreCase(relations.get(1))){
-            result.add(relations.remove(0));
-        }else {
-            relations.remove(0);
-        }
-        result.add(relations.remove(0));
-        return result;
-    }
-
     //returns a List with entries of words that can be interchanged in the DIA "dia" at same entry position
     //--macLength: the maximum length of the words
     public static EqualList findEqual(DIA dia, int maxLength){
@@ -110,6 +91,7 @@ public class Equals {
         return result;
     }
 
+    //Returns the "equalList" in reverse order
     private static EqualList reverseMap(EqualList equalList){
         EqualList result= new EqualList(new ArrayList<>(),new ArrayList<>());
         String firstKey, firstValue;
@@ -122,6 +104,7 @@ public class Equals {
         return result;
     }
 
+    //It sorts the "equalList" by the size of the values
     public static void sortbyValue(EqualList equalList){
         int i=equalList.Size()-1;
         int length=equalList.getValue().get(i).length();
@@ -134,16 +117,5 @@ public class Equals {
             }
             length=equalList.getValue().get(i).length();
         }
-    }
-
-    private static void Sort(EqualList equalList, int begin, int end){
-        if(end-begin<2){
-            if(equalList.getValue().get(end-begin).length()>equalList.getValue().get(end-begin+1).length()){
-
-            }
-        }
-        int mid=(end-begin)/2+begin;
-        Sort(equalList,begin,mid);
-        Sort(equalList,mid+1,end);
     }
 }

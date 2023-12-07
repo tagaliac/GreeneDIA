@@ -1,9 +1,7 @@
 package Graphic;
 
 import java.awt.*;
-
 import javax.swing.*;
-
 import static Graphic.window.*;
 
 public class Draw extends JLabel {
