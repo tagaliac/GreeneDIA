@@ -15,15 +15,18 @@ public class window {
     public static int width=700,height=700,xoff=100,yoff=100;
     public static JButton[] btn=new JButton[7];
     private static JTextArea textArea=new JTextArea();
+    private static JTextField extrainformation=new JTextField();
     private static final String[] dea_dia = new String[4];
     private static DIA[] dias=new DIA[dea_dia.length];
     private static int answerChoosingAutomata,maxLength;
     private static EqualList equal;
     private static String[][] box;
+    private static boolean isInterrupted=false;
 
     private static final int DEFAULT_MAX_LENGTH = 6;
     private static final int DEFAULT_LENGTH_1 = 15;
     private static final int DEFAULT_LENGTH_2 = 15;
+    private static final int MAX_SLEEPING_DURATION=6000;
 
     public static void setWindow() {
         //set DIAs
@@ -67,6 +70,12 @@ public class window {
         image.add(inputLength2);
         image.add(labelLength2);
 
+        //set extra informations
+        extrainformation.setBounds(xoff,yoff+150,width-2*xoff,50);
+        extrainformation.setText("it is recommended to set \"First Length\"=\"Second Length\"=\"3*Maxlength\"");
+        extrainformation.setEditable(false);
+        image.add(extrainformation);
+
         //set DIA definition buttons
         for(int i=0;i<dea_dia.length;i++){
             btn[i]=new JButton(dea_dia[i]);
@@ -79,7 +88,7 @@ public class window {
         JScrollPane scroll = (new JScrollPane(textArea));
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scroll.setBounds(xoff,yoff+150,width-2*xoff,height-2*yoff-100);
+        scroll.setBounds(xoff,yoff+200,width-2*xoff,height-2*yoff-200);
         textArea.setEditable(true);
         image.getContentPane().add(scroll);
 
@@ -87,13 +96,19 @@ public class window {
         btn[dea_dia.length]=new JButton("Equals");
         btn[dea_dia.length].setBounds(width/2-200,yoff+50,133,50);
         btn[dea_dia.length].addActionListener(e -> {
-            setMaxLength((int)inputMaxLength.getValue());
-            setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-            equal= Equals.findEqual(dias[answerChoosingAutomata],maxLength);
-            textArea.setText("");
-            for(int i=0;i<equal.Size();i++) {
-                textArea.append(equal.getEntry(i) + "\n");
-            }
+            timer(()->{
+                setMaxLength((int)inputMaxLength.getValue());
+                setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
+                equal= Equals.findEqual(dias[answerChoosingAutomata],maxLength);
+                if(!isInterrupted){
+                    textArea.setText("");
+                    for(int i=0;i<equal.Size();i++) {
+                        textArea.append(equal.getEntry(i) + "\n");
+                    }
+                }else{
+                    isInterrupted=false;
+                }
+            },MAX_SLEEPING_DURATION);
         });
         image.add(btn[dea_dia.length]);
 
@@ -101,42 +116,52 @@ public class window {
         btn[dea_dia.length+1]=new JButton("Box");
         btn[dea_dia.length+1].setBounds(width/2-67,yoff+50,134,50);
         btn[dea_dia.length+1].addActionListener(e -> {
-            setMaxLength((int)inputMaxLength.getValue());
-            setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-            box= GreensRelation.getGreenBox(dias[answerChoosingAutomata],maxLength);
-            textArea.setColumns(box[0].length);
-            textArea.setRows(box.length);
-            textArea.setText("");
-            for(int i=0;i<box.length;i++) {
-                for (int j=0;j<box[i].length;j++){
-                    textArea.append(box[i][j] + " ");
+            timer(()->{
+                setMaxLength((int)inputMaxLength.getValue());
+                setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
+                box= GreensRelation.getGreenBox(dias[answerChoosingAutomata],maxLength);
+                if(!isInterrupted){
+                    textArea.setText("");
+                    for(int i=0;i<box.length;i++) {
+                        for (int j=0;j<box[i].length;j++){
+                            textArea.append(box[i][j] + " ");
+                        }
+                        textArea.append("\n");
+                    }
+                }else{
+                    isInterrupted=false;
                 }
-                textArea.append("\n");
-            }
+            },MAX_SLEEPING_DURATION);
         });
         image.add(btn[dea_dia.length+1]);
 
         //sets H-CLass-button
         btn[dea_dia.length+2]=new JButton("H Class");
         btn[dea_dia.length+2].setBounds(width/2+67,yoff+50,133,50);
-        btn[dea_dia.length+2].addActionListener(e -> {
-            setMaxLength((int)inputMaxLength.getValue());
-            setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-            List<List<String>> HClasses=GreensRelation.getHValues(dias[answerChoosingAutomata],maxLength);
-            if(!HClasses.isEmpty()){
-                textArea.setText("");
-                for(List<String> HCLass:HClasses) {
-                    if(HCLass.size()<=1){
-                        continue;
+        btn[dea_dia.length+2].addActionListener(event -> {
+            timer(()->{
+                setMaxLength((int)inputMaxLength.getValue());
+                setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
+                List<List<String>> HClasses=GreensRelation.getHValues(dias[answerChoosingAutomata],maxLength);
+                if(!isInterrupted){
+                    if(!HClasses.isEmpty()){
+                        textArea.setText("");
+                        for(List<String> HCLass:HClasses) {
+                            if(HCLass.size()<=1){
+                                continue;
+                            }
+                            for (String element:HCLass){
+                                textArea.append(element+"<->");
+                            }
+                            textArea.append("\n");
+                        }
+                    }else{
+                        textArea.setText("Nothing");
                     }
-                    for (String element:HCLass){
-                        textArea.append(element+"<->");
-                    }
-                    textArea.append("\n");
+                }else{
+                    isInterrupted=false;
                 }
-            }else{
-                textArea.setText("Nothing");
-            }
+            },MAX_SLEEPING_DURATION);
         });
         image.add(btn[dea_dia.length+2]);
 
@@ -172,6 +197,29 @@ public class window {
             maxLength=3;
         }else{
             maxLength=value;
+        }
+    }
+
+    //Starts the action "runnable" for a duration of "timeInMilliSecond"
+    //To fully interrupt an action, the action must use the "isInterrupt"-Variable
+    private static void timer(Runnable runnable, int timeInMilliSeconds){
+        Thread exeThread=new Thread(runnable);
+        Thread waitThread=new Thread(()->{
+            try {
+                Thread.sleep(timeInMilliSeconds);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        });
+        waitThread.start();
+        exeThread.start();
+        while (exeThread.isAlive()&&waitThread.isAlive()){}
+        if(waitThread.isAlive()){
+            waitThread.interrupt();
+        }else {
+            isInterrupted=true;
+            textArea.setText("action interrupt because it takes too long");
+            exeThread.interrupt();
         }
     }
 }

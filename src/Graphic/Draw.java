@@ -18,4 +18,3 @@ public class Draw extends JLabel {
         repaint();
     }
 }
-
