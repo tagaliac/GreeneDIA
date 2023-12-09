@@ -21,7 +21,6 @@ public class Main {
 
     public static DEA createFiniteTestDEA(){
         List<Character> alphabet = new ArrayList<>();
-        List<state> states = new ArrayList<>();
         List<TransferFunction> transferFunctions = new ArrayList<>();
         List<Integer> finalstates = new ArrayList<>();
 
@@ -30,12 +29,6 @@ public class Main {
         alphabet.add('b');
         alphabet.add('c');
         alphabet.add('d');
-
-        //define states
-        states.add(new state(0,alphabet));
-        states.add(new state(1,alphabet));
-        states.add(new state(2,alphabet));
-        states.add(new state(3,alphabet));
 
         //define transfer functions
         transferFunctions.add(new TransferFunction(0,'a',1));

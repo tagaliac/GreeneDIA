@@ -38,6 +38,7 @@ public class Equals {
     }
 
     //Displays the monoid
+    //It exists for testing
     public static void DisplayMonoid(List<String> monoid){
         for(int i=0;i< monoid.size();i++){
             System.out.print("["+monoid.get(i)+"]");
