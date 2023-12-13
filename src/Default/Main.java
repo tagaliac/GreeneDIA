@@ -8,12 +8,13 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args){
-        DIA[] dias = new DIA[4];
+        DIA[] dias = new DIA[5];
         //DEA TestDEA = createFiniteTestDEA();
         dias[0] = createDyck(15);
         dias[1] = createDyckPlus(10);
         dias[2] = createHAnd(15,15);
         dias[3] = createHOr(15,15);
+        dias[4] = createDyckWithoutEmpty(15);
 
         window.setWindow();
 
@@ -271,6 +272,36 @@ public class Main {
 
         //define dea
         return new DIA(length1*length2+3, alphabet, transferFunctions, 1, finalstates,InfinitieStates);
+    }
+
+    public static DIA createDyckWithoutEmpty(int length){
+        List<Character> alphabet = new ArrayList<>();
+        List<TransferFunction> transferFunctions = new ArrayList<>();
+        List<Integer> finalstates = new ArrayList<>();
+        List<Integer> InfinitieStates = new ArrayList<>();
+
+        //define alphabet
+        alphabet.add('a');
+        alphabet.add('b');
+
+        //define transfer functions
+        transferFunctions.add(new TransferFunction(0, 'a', 1));
+        transferFunctions.add(new TransferFunction(0, 'b', 0));
+
+        for (int i = 1; i < length - 1; i++) {
+            transferFunctions.add(new TransferFunction(i, 'a', i + 1));
+            transferFunctions.add(new TransferFunction(i, 'b', i - 1));
+        }
+
+        transferFunctions.add(new TransferFunction(length - 1, 'a', length - 1));
+        transferFunctions.add(new TransferFunction(length - 1, 'b', length - 2));
+
+        //define final states
+        finalstates.add(0);
+
+        List<Integer> InfiniteStates = new ArrayList<>();
+        InfiniteStates.add(length - 1);
+        return new DIA(length, alphabet, transferFunctions, 0, finalstates, InfiniteStates);
     }
 
     //Prints the list "stringList" in lines with maximum Size "sizeOfLine"

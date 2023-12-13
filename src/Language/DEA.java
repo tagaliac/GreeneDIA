@@ -80,7 +80,7 @@ public class DEA {
     }
 
     //Changes transfer function of DEA
-    private void ChangeTransfer(TransferFunction transfer){
+    public void ChangeTransfer(TransferFunction transfer){
         // checking input values
         state StartState = null;
         state EndState = null;

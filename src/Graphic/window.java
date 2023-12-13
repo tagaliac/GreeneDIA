@@ -12,11 +12,11 @@ import javax.swing.*;
 
 public class window {
     public static JFrame image=new JFrame("GreeneDIA");
-    public static int width=700,height=700,xoff=100,yoff=100;
-    public static JButton[] btn=new JButton[7];
+    public static int width=1000,height=1000,xoff=50,yoff=100;
     private static JTextArea textArea=new JTextArea();
     private static JTextField extrainformation=new JTextField();
-    private static final String[] dea_dia = new String[4];
+    private static final String[] dea_dia = new String[5];
+    public static JButton[] btn=new JButton[dea_dia.length+3];
     private static DIA[] dias=new DIA[dea_dia.length];
     private static int answerChoosingAutomata,maxLength;
     private static EqualList equal;
@@ -28,12 +28,15 @@ public class window {
     private static final int DEFAULT_LENGTH_2 = 15;
     private static final int MAX_SLEEPING_DURATION=6000;
 
+    public static DIA costumDIA=Main.createDyckWithoutEmpty(DEFAULT_LENGTH_1);
+
     public static void setWindow() {
         //set DIAs
         dea_dia[0] = "Dyck";
-        dea_dia[1] = "Dyck Plus";
+        dea_dia[1] = "Dyck R";
         dea_dia[2] = "H And";
         dea_dia[3] = "H Or";
+        dea_dia[4] = "Custom";
         setDIAS(DEFAULT_LENGTH_1,DEFAULT_LENGTH_2);
 
         //define image
@@ -53,9 +56,8 @@ public class window {
         image.add(labelMaxLength);
 
         //set first length input
-        JFormattedTextField inputLength1;
+        JFormattedTextField inputLength1=new JFormattedTextField(DEFAULT_LENGTH_1);
         JLabel labelLength1 = new JLabel("First Length:");
-        inputLength1 = new JFormattedTextField(DEFAULT_LENGTH_1);
         labelLength1.setBounds(width/2,yoff+100,100,25);
         inputLength1.setBounds(width/2+100,yoff+100,100,25);
         image.add(inputLength1);
@@ -179,6 +181,9 @@ public class window {
     //"choice" is needed to define the dia what should be connected with the button
     private static void setActionDIAButtons(int choice){
         btn[choice].addActionListener(e -> {
+            if(choice==dias.length-1){
+                DIAChoiceWindow.setImage();
+            }
             answerChoosingAutomata=choice;
         });
     }
@@ -189,6 +194,8 @@ public class window {
         dias[1]= Main.createDyckPlus(length1);
         dias[2]= Main.createHAnd(length1,length2);
         dias[3]= Main.createHOr(length1,length2);
+        dias[4]= costumDIA;
+        System.out.println(costumDIA.getAlphabet());
     }
 
     //Sets the maximum Length
