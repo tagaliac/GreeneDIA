@@ -13,7 +13,7 @@ public class Draw extends JLabel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 
         g2d.setColor(Color.white);
-        g2d.fillRect(xoff,yoff,width-2*xoff,height-2*yoff);
+        g2d.fillRect(XOFF,YOFF,window.WIDTH-2*XOFF,window.HEIGHT-2*YOFF);
 
         repaint();
     }

@@ -12,7 +12,7 @@ import javax.swing.*;
 
 public class window {
     public static JFrame image=new JFrame("GreeneDIA");
-    public static int width=1000,height=1000,xoff=50,yoff=100;
+    public final static int WIDTH=1000,HEIGHT=1000,XOFF=50,YOFF=100;
     private static JTextArea textArea=new JTextArea();
     private static JTextField extrainformation=new JTextField();
     private static final String[] dea_dia = new String[5];
@@ -27,6 +27,8 @@ public class window {
     private static final int DEFAULT_LENGTH_1 = 15;
     private static final int DEFAULT_LENGTH_2 = 15;
     private static final int MAX_SLEEPING_DURATION=6000;
+    private static final int HEIGHT_OF_LINES = 50;
+    private static final int MINIMUM_MAX_LENGTH_VALUE=3;
 
     public static DIA costumDIA=Main.createDyckWithoutEmpty(DEFAULT_LENGTH_1);
 
@@ -40,7 +42,7 @@ public class window {
         setDIAS(DEFAULT_LENGTH_1,DEFAULT_LENGTH_2);
 
         //define image
-        image.setSize(width, height);
+        image.setSize(WIDTH, HEIGHT);
         image.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         image.getContentPane().setBackground(new Color(0,255,0));
         image.setLayout(null);
@@ -50,16 +52,16 @@ public class window {
         JFormattedTextField inputMaxLength;
         JLabel labelMaxLength = new JLabel("Maxlength:");
         inputMaxLength = new JFormattedTextField(DEFAULT_MAX_LENGTH);
-        labelMaxLength.setBounds(width/2-200,yoff+100,100,50);
-        inputMaxLength.setBounds(width/2-100,yoff+100,100,50);
+        labelMaxLength.setBounds(XOFF,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
+        inputMaxLength.setBounds(XOFF+(WIDTH-2*XOFF)/6,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
         image.add(inputMaxLength);
         image.add(labelMaxLength);
 
         //set first length input
         JFormattedTextField inputLength1=new JFormattedTextField(DEFAULT_LENGTH_1);
         JLabel labelLength1 = new JLabel("First Length:");
-        labelLength1.setBounds(width/2,yoff+100,100,25);
-        inputLength1.setBounds(width/2+100,yoff+100,100,25);
+        labelLength1.setBounds(XOFF+(WIDTH-2*XOFF)/6*2,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
+        inputLength1.setBounds(XOFF+(WIDTH-2*XOFF)/6*3,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
         image.add(inputLength1);
         image.add(labelLength1);
 
@@ -67,21 +69,21 @@ public class window {
         JFormattedTextField inputLength2;
         JLabel labelLength2 = new JLabel("Second Length:");
         inputLength2 = new JFormattedTextField(DEFAULT_LENGTH_2);
-        labelLength2.setBounds(width/2,yoff+125,100,25);
-        inputLength2.setBounds(width/2+100,yoff+125,100,25);
+        labelLength2.setBounds(XOFF+(WIDTH-2*XOFF)/6*4,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
+        inputLength2.setBounds(XOFF+(WIDTH-2*XOFF)/6*5,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
         image.add(inputLength2);
         image.add(labelLength2);
 
         //set extra informations
-        extrainformation.setBounds(xoff,yoff+150,width-2*xoff,50);
-        extrainformation.setText("it is recommended to set \"First Length\"=\"Second Length\"=\"3*Maxlength\"");
+        extrainformation.setBounds(XOFF,YOFF+HEIGHT_OF_LINES*3,WIDTH-2*XOFF,HEIGHT_OF_LINES);
+        extrainformation.setText("It is recommended to set \"First Length\"=\"Second Length\"=\"3*Maxlength\". MaxLength can be minimum "+MINIMUM_MAX_LENGTH_VALUE+".");
         extrainformation.setEditable(false);
         image.add(extrainformation);
 
         //set DIA definition buttons
         for(int i=0;i<dea_dia.length;i++){
             btn[i]=new JButton(dea_dia[i]);
-            btn[i].setBounds(xoff+i*(width-2*xoff)/dea_dia.length,yoff,(width-2*xoff)/dea_dia.length,50);
+            btn[i].setBounds(XOFF+i*(WIDTH-2*XOFF)/dea_dia.length,YOFF,(WIDTH-2*XOFF)/dea_dia.length,HEIGHT_OF_LINES);
             setActionDIAButtons(i);
             image.add(btn[i]);
         }
@@ -90,13 +92,13 @@ public class window {
         JScrollPane scroll = (new JScrollPane(textArea));
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scroll.setBounds(xoff,yoff+200,width-2*xoff,height-2*yoff-200);
+        scroll.setBounds(XOFF,YOFF+HEIGHT_OF_LINES*4,WIDTH-2*XOFF,HEIGHT-2*YOFF-200);
         textArea.setEditable(true);
         image.getContentPane().add(scroll);
 
         //sets equal-button
         btn[dea_dia.length]=new JButton("Equals");
-        btn[dea_dia.length].setBounds(width/2-200,yoff+50,133,50);
+        btn[dea_dia.length].setBounds(XOFF,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/3,HEIGHT_OF_LINES);
         btn[dea_dia.length].addActionListener(e -> {
             timer(()->{
                 setMaxLength((int)inputMaxLength.getValue());
@@ -116,7 +118,7 @@ public class window {
 
         //sets box-button
         btn[dea_dia.length+1]=new JButton("Box");
-        btn[dea_dia.length+1].setBounds(width/2-67,yoff+50,134,50);
+        btn[dea_dia.length+1].setBounds(XOFF+(WIDTH-2*XOFF)/3,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/3,HEIGHT_OF_LINES);
         btn[dea_dia.length+1].addActionListener(e -> {
             timer(()->{
                 setMaxLength((int)inputMaxLength.getValue());
@@ -139,7 +141,7 @@ public class window {
 
         //sets H-CLass-button
         btn[dea_dia.length+2]=new JButton("H Class");
-        btn[dea_dia.length+2].setBounds(width/2+67,yoff+50,133,50);
+        btn[dea_dia.length+2].setBounds(XOFF+(WIDTH-2*XOFF)/3*2,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/3,HEIGHT_OF_LINES);
         btn[dea_dia.length+2].addActionListener(event -> {
             timer(()->{
                 setMaxLength((int)inputMaxLength.getValue());
@@ -169,7 +171,7 @@ public class window {
 
         //sets background image
         Draw draw = new Draw();
-        draw.setBounds(0,0,width,height);
+        draw.setBounds(0,0,WIDTH,HEIGHT);
         draw.setVisible(true);
         image.add(draw);
 
@@ -195,13 +197,12 @@ public class window {
         dias[2]= Main.createHAnd(length1,length2);
         dias[3]= Main.createHOr(length1,length2);
         dias[4]= costumDIA;
-        System.out.println(costumDIA.getAlphabet());
     }
 
     //Sets the maximum Length
     private static void setMaxLength(int value){
-        if(value<3){
-            maxLength=3;
+        if(value<MINIMUM_MAX_LENGTH_VALUE){
+            maxLength=MINIMUM_MAX_LENGTH_VALUE;
         }else{
             maxLength=value;
         }
