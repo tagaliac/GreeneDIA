@@ -8,13 +8,14 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args){
-        DIA[] dias = new DIA[5];
-        //DEA TestDEA = createFiniteTestDEA();
+        //test functions
+        /* DIA[] dias = new DIA[5];
+        DEA TestDEA = createFiniteTestDEA();
         dias[0] = createDyck(15);
         dias[1] = createDyckPlus(10);
         dias[2] = createHAnd(15,15);
         dias[3] = createHOr(15,15);
-        dias[4] = createDyckWithoutEmpty(15);
+        dias[4] = createDyckWithoutEmpty(15);*/
 
         window.setWindow();
 

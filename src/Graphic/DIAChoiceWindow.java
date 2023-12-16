@@ -20,7 +20,7 @@ public class DIAChoiceWindow {
     private static List<Character> alphabet=new ArrayList<>();
     private static List<TransferFunction> transferFunctions=new ArrayList<>();
     private static TextArea functionList=new TextArea();
-    private static Label[] basicInfo =new Label[3];
+    private static Label[] basicInfo =new Label[4];
 
     public static void setImage(){
         //define image
@@ -54,9 +54,11 @@ public class DIAChoiceWindow {
         basicInfo[0].setBounds(XOFF,YCAPTION,WIDTH-XOFF*2,(YOFF-YCAPTION)/basicInfo.length);
         basicInfo[1].setBounds(XOFF,(YOFF-YCAPTION)/basicInfo.length+YCAPTION,WIDTH-XOFF*2,(YOFF-YCAPTION)/basicInfo.length);
         basicInfo[2].setBounds(XOFF,(YOFF-YCAPTION)/basicInfo.length*2+YCAPTION,WIDTH-XOFF*2,(YOFF-YCAPTION)/basicInfo.length);
-        basicInfo[0].setText("First use the define button to define the number of states, the alphabet, the start state, the final states\n");
-        basicInfo[1].setText("and the infinite states. Then use the add and clear button to define the functions.\n");
-        basicInfo[2].setText("The states are defined as [0,...,(number of states)-1]");
+        basicInfo[3].setBounds(XOFF,(YOFF-YCAPTION)/basicInfo.length*3+YCAPTION,WIDTH-XOFF*2,(YOFF-YCAPTION)/basicInfo.length);
+        basicInfo[0].setText("First use the define button to define the number of states, the alphabet, the start state, the final states");
+        basicInfo[1].setText("and the infinite states. Then use the add and clear button to define the functions.");
+        basicInfo[2].setText("The states are defined as [0,...,(number of states)-1].");
+        basicInfo[3].setText("Undefined functions are self loops.");
 
         //sets the number of states
         textFields[0].setBounds(WIDTH/4*3,YOFF,WIDTH/4-XOFF,HEIGHT_OF_LINES);

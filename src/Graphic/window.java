@@ -14,11 +14,11 @@ public class window {
     public static JFrame image=new JFrame("GreeneDIA");
     public final static int WIDTH=1000,HEIGHT=1000,XOFF=50,YOFF=100;
     private static JTextArea textArea=new JTextArea();
-    private static JTextField extrainformation=new JTextField();
+    private static JTextField[] extrainformation=new JTextField[2];
     private static final String[] dea_dia = new String[5];
     public static JButton[] btn=new JButton[dea_dia.length+3];
     private static DIA[] dias=new DIA[dea_dia.length];
-    private static int answerChoosingAutomata,maxLength;
+    private static int answerChoosingAutomata,inputLength;
     private static EqualList equal;
     private static String[][] box;
     private static boolean isInterrupted=false;
@@ -28,7 +28,7 @@ public class window {
     private static final int DEFAULT_LENGTH_2 = 15;
     private static final int MAX_SLEEPING_DURATION=6000;
     private static final int HEIGHT_OF_LINES = 50;
-    private static final int MINIMUM_MAX_LENGTH_VALUE=3;
+    private static final int MINIMUM_INPUT_LENGTH_VALUE=3, MINIMUM_VERTICAL_LENGTH=8, MINIMUM_HORIZONTAL_LENGTH=8;
 
     public static DIA costumDIA=Main.createDyckWithoutEmpty(DEFAULT_LENGTH_1);
 
@@ -50,7 +50,7 @@ public class window {
 
         //set max length input
         JFormattedTextField inputMaxLength;
-        JLabel labelMaxLength = new JLabel("Maxlength:");
+        JLabel labelMaxLength = new JLabel("Input Length:");
         inputMaxLength = new JFormattedTextField(DEFAULT_MAX_LENGTH);
         labelMaxLength.setBounds(XOFF,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
         inputMaxLength.setBounds(XOFF+(WIDTH-2*XOFF)/6,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
@@ -59,7 +59,7 @@ public class window {
 
         //set first length input
         JFormattedTextField inputLength1=new JFormattedTextField(DEFAULT_LENGTH_1);
-        JLabel labelLength1 = new JLabel("First Length:");
+        JLabel labelLength1 = new JLabel("Horizontal Length:");
         labelLength1.setBounds(XOFF+(WIDTH-2*XOFF)/6*2,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
         inputLength1.setBounds(XOFF+(WIDTH-2*XOFF)/6*3,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
         image.add(inputLength1);
@@ -67,18 +67,23 @@ public class window {
 
         //set second length input
         JFormattedTextField inputLength2;
-        JLabel labelLength2 = new JLabel("Second Length:");
+        JLabel labelLength2 = new JLabel("Vertical Length:");
         inputLength2 = new JFormattedTextField(DEFAULT_LENGTH_2);
         labelLength2.setBounds(XOFF+(WIDTH-2*XOFF)/6*4,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
         inputLength2.setBounds(XOFF+(WIDTH-2*XOFF)/6*5,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
         image.add(inputLength2);
         image.add(labelLength2);
 
-        //set extra informations
-        extrainformation.setBounds(XOFF,YOFF+HEIGHT_OF_LINES*3,WIDTH-2*XOFF,HEIGHT_OF_LINES);
-        extrainformation.setText("It is recommended to set \"First Length\"=\"Second Length\"=\"3*Maxlength\". MaxLength can be minimum "+MINIMUM_MAX_LENGTH_VALUE+".");
-        extrainformation.setEditable(false);
-        image.add(extrainformation);
+        //set extra information
+        for (int i=0;i<extrainformation.length;i++){
+            extrainformation[i]=new JTextField();
+            extrainformation[i].setEditable(false);
+            image.add(extrainformation[i]);
+        }
+        extrainformation[0].setBounds(XOFF,YOFF+HEIGHT_OF_LINES*3,WIDTH-2*XOFF,HEIGHT_OF_LINES/2);
+        extrainformation[1].setBounds(XOFF,YOFF+HEIGHT_OF_LINES*3+HEIGHT_OF_LINES/2,WIDTH-2*XOFF,HEIGHT_OF_LINES/2);
+        extrainformation[0].setText("It is recommended to set \"Horizontal Length\"=\"Vertical Length\"=\"3*Input Length\". Input Length can be minimum "+MINIMUM_INPUT_LENGTH_VALUE+".");
+        extrainformation[1].setText("Horizontal Length can be minimum "+MINIMUM_HORIZONTAL_LENGTH+"."+" Vertical Length can be minimum "+MINIMUM_VERTICAL_LENGTH+".");
 
         //set DIA definition buttons
         for(int i=0;i<dea_dia.length;i++){
@@ -101,9 +106,9 @@ public class window {
         btn[dea_dia.length].setBounds(XOFF,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/3,HEIGHT_OF_LINES);
         btn[dea_dia.length].addActionListener(e -> {
             timer(()->{
-                setMaxLength((int)inputMaxLength.getValue());
+                setInputLength((int)inputMaxLength.getValue());
                 setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-                equal= Equals.findEqual(dias[answerChoosingAutomata],maxLength);
+                equal= Equals.findEqual(dias[answerChoosingAutomata],inputLength);
                 if(!isInterrupted){
                     textArea.setText("");
                     for(int i=0;i<equal.Size();i++) {
@@ -117,13 +122,13 @@ public class window {
         image.add(btn[dea_dia.length]);
 
         //sets box-button
-        btn[dea_dia.length+1]=new JButton("Box");
+        btn[dea_dia.length+1]=new JButton("Green's Box");
         btn[dea_dia.length+1].setBounds(XOFF+(WIDTH-2*XOFF)/3,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/3,HEIGHT_OF_LINES);
         btn[dea_dia.length+1].addActionListener(e -> {
             timer(()->{
-                setMaxLength((int)inputMaxLength.getValue());
+                setInputLength((int)inputMaxLength.getValue());
                 setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-                box= GreensRelation.getGreenBox(dias[answerChoosingAutomata],maxLength);
+                box= GreensRelation.getGreenBox(dias[answerChoosingAutomata],inputLength);
                 if(!isInterrupted){
                     textArea.setText("");
                     for(int i=0;i<box.length;i++) {
@@ -144,9 +149,9 @@ public class window {
         btn[dea_dia.length+2].setBounds(XOFF+(WIDTH-2*XOFF)/3*2,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/3,HEIGHT_OF_LINES);
         btn[dea_dia.length+2].addActionListener(event -> {
             timer(()->{
-                setMaxLength((int)inputMaxLength.getValue());
+                setInputLength((int)inputMaxLength.getValue());
                 setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-                List<List<String>> HClasses=GreensRelation.getHValues(dias[answerChoosingAutomata],maxLength);
+                List<List<String>> HClasses=GreensRelation.getHValues(dias[answerChoosingAutomata],inputLength);
                 if(!isInterrupted){
                     if(!HClasses.isEmpty()){
                         textArea.setText("");
@@ -192,20 +197,36 @@ public class window {
 
     //Defines the DIAs with proper parameters
     private static void setDIAS(int length1, int length2){
-        dias[0]= Main.createDyck(length1);
-        dias[1]= Main.createDyckPlus(length1);
-        dias[2]= Main.createHAnd(length1,length2);
-        dias[3]= Main.createHOr(length1,length2);
+        dias[0]= Main.createDyck(setHorizontalLength(length1));
+        dias[1]= Main.createDyckPlus(setHorizontalLength(length1));
+        dias[2]= Main.createHAnd(setHorizontalLength(length1),setVerticalLength(length2));
+        dias[3]= Main.createHOr(setHorizontalLength(length1),setVerticalLength(length2));
         dias[4]= costumDIA;
     }
 
-    //Sets the maximum Length
-    private static void setMaxLength(int value){
-        if(value<MINIMUM_MAX_LENGTH_VALUE){
-            maxLength=MINIMUM_MAX_LENGTH_VALUE;
+    //Sets the input Length
+    private static void setInputLength(int value){
+        if(value<MINIMUM_INPUT_LENGTH_VALUE){
+            inputLength=MINIMUM_INPUT_LENGTH_VALUE;
         }else{
-            maxLength=value;
+            inputLength=value;
         }
+    }
+
+    //Sets the vertical Length
+    private static int setVerticalLength(int value){
+        if(value<MINIMUM_VERTICAL_LENGTH){
+            return MINIMUM_VERTICAL_LENGTH;
+        }
+        return value;
+    }
+
+    //Sets the horizontal Length
+    private static int setHorizontalLength(int value){
+        if(value<MINIMUM_HORIZONTAL_LENGTH){
+            return MINIMUM_HORIZONTAL_LENGTH;
+        }
+        return value;
     }
 
     //Starts the action "runnable" for a duration of "timeInMilliSecond"
