@@ -8,7 +8,7 @@ import java.util.List;
 public class Submonoid {
     //Creates a submonoid with the Alphabet "alphabet" and words with a maximum length of "maxLength"
     public static String[] createSubmonoid(List<Character> alphabet, int maxLength){
-        String[] submonoid = new String[(int) Math.pow(alphabet.size(),maxLength)];
+        String[] submonoid = new String[(int) Math.pow(alphabet.size(),maxLength+1)-1];
         int[] count = new int[maxLength];
         count[0]=1;
         submonoid[0]="";
@@ -46,66 +46,28 @@ public class Submonoid {
         return raiseCounter(result,position+1,pow);
     }
 
-    //Returns the First Idempotent of "DIA" in "submonoid"
-    //Returns null if Idempotent does not exist
-    public static String FirstIdempotent(DIA dia, List<String> submonoid){
-        Transition transition;
-        boolean isIdempotent;
-        for (int i=1;i<submonoid.size();i++){
-            transition=dia.getTransitionWithString(submonoid.get(i));
-            isIdempotent=((transition.getImage().length-transition.getInfiniteCases().size())>0);
-            for(int j=0;j<transition.getImage().length;j++){
-                if((transition.getImage()[j]!=-1)&&(transition.getImage()[j]!=j)){
-                    isIdempotent=false;
-                }
-            }
-            if(isIdempotent){
-                return submonoid.get(i);
-            }
-        }
-        return null;
-    }
-
-
-    //Returns a List of Idempotents of "DIA" in "submonoid" that can be interchanged with "beginWord"
-    public static List<String> findIdempotents(DIA dia, List<String> submonoid, String beginWord){
+    //testversion
+    //Returns a List of Idempotents of "DIA" in "submonoid" that can be interchanged with "Word"
+    public static List<String> findALLIdempotents(DIA dia, List<String> submonoid, String word){
         Transition transition;
         List<String> result=new ArrayList<>();
-        Transition compare = dia.getTransitionWithString(beginWord);
+        Transition compare = dia.getTransitionWithString(word);
         boolean isIdempotent;
+        String rest;
         for (int i=1;i<submonoid.size();i++){
-            transition=dia.getTransitionWithString(beginWord+submonoid.get(i));
-            isIdempotent=((transition.getImage().length-transition.getInfiniteCases().size())>0);
-            for(int j=0;j<transition.getImage().length;j++){
-                if((transition.getImage()[j]!=-1)&&(compare.getImage()[j]!=-1)
-                        &&(transition.getImage()[j]!=compare.getImage()[j])){
-                    isIdempotent=false;
+            rest=submonoid.get(i);
+            for(int k=0;k<rest.length()+1;k++) {
+                transition=dia.getTransitionWithString(Subsequence(rest, 0, k) + word + Subsequence(rest, k, rest.length()));
+                isIdempotent=((transition.getImage().length-transition.getInfiniteCases().size())>0);
+                for (int j=0; j<transition.getImage().length; j++) {
+                    if ((transition.getImage()[j]!=-1)&&(compare.getImage()[j]!=-1)
+                            &&(transition.getImage()[j]!=compare.getImage()[j])){
+                        isIdempotent=false;
+                    }
                 }
-            }
-            if(isIdempotent){
-                result.add(submonoid.get(i));
-            }
-        }
-        return result;
-    }
-
-    //Returns a List of Idempotents of "DIA" in "submonoid" that can be interchanged with "endWord"
-    public static List<String> findIdempotentsBack(DIA dia, List<String> submonoid, String endWord){
-        Transition transition;
-        List<String> result=new ArrayList<>();
-        Transition compare = dia.getTransitionWithString(endWord);
-        boolean isIdempotent;
-        for (int i=1;i<submonoid.size();i++){
-            transition=dia.getTransitionWithString(submonoid.get(i)+endWord);
-            isIdempotent=((transition.getImage().length-transition.getInfiniteCases().size())>0);
-            for(int j=0;j<transition.getImage().length;j++){
-                if((transition.getImage()[j]!=-1)&&(compare.getImage()[j]!=-1)
-                        &&(transition.getImage()[j]!=compare.getImage()[j])){
-                    isIdempotent=false;
+                if (isIdempotent) {
+                    result.add(Subsequence(rest, 0, k) + word + Subsequence(rest, k, rest.length()));
                 }
-            }
-            if(isIdempotent){
-                result.add(submonoid.get(i));
             }
         }
         return result;

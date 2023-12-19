@@ -8,31 +8,20 @@ import static Monoid.Submonoid.*;
 
 public class Equals {
     //returns a List with entries of words that can be interchanged in the DIA "dia" at same entry position
-    //--macLength: the maximum length of the words
-    public static EqualList findEqual(DIA dia, int maxLength){
+    //--maxLength: the maximum length of the words
+    public static EqualList findEquals(DIA dia, int maxLength){
         List<String> submonoid = convertAlphabet(dia,maxLength);
         List<String> allIdempotent;
         EqualList resultF =new EqualList();
-        EqualList resultB =new EqualList();
         String currentKey;
         for(int i=0;i<submonoid.size();i++){
             currentKey=submonoid.get(i);
-            allIdempotent=findIdempotents(dia,submonoid,currentKey);
+            allIdempotent=findALLIdempotents(dia,submonoid,currentKey);
             for(String element:allIdempotent){
-                resultF.add(currentKey+ element,currentKey);
+                resultF.add(element,currentKey);
             }
         }
         resultF=clearUnnecessaryEquals(resultF, 4);
-        for(int i=0;i<submonoid.size();i++){
-            currentKey=submonoid.get(i);
-            allIdempotent=findIdempotentsBack(dia,submonoid,currentKey);
-            for(String element:allIdempotent){
-                resultB.add(element+currentKey,currentKey);
-            }
-        }
-        resultB=clearUnnecessaryEquals(resultB, 4);
-        resultF.append(resultB);
-        resultF=clearUnnecessaryEquals(resultF, 2);
         Equals.sortbyValue(resultF);
         return reverseMap(resultF);
     }

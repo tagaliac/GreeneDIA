@@ -174,7 +174,7 @@ public class GreensRelation {
                 return o1.length()-o2.length();
             }
         });
-        EqualList equal=Equals.findEqual(dia, maxLength);
+        EqualList equal=Equals.findEquals(dia, maxLength);
         String[][] result=new String[submonoid.size()][submonoid.size()];
         List<String> Rlist=new ArrayList<>();
         List<String> Llist=new ArrayList<>();
@@ -275,7 +275,7 @@ public class GreensRelation {
     public static List<List<String>> getHValues(DIA dia, int maxLength){
         List<List<String>> result=new ArrayList<>();
         List<String> submonoid= Equals.convertAlphabet(dia, maxLength);
-        EqualList equal=Equals.findEqual(dia, maxLength);
+        EqualList equal=Equals.findEquals(dia, maxLength);
         submonoid=removeEqualsFromMonoid(submonoid,equal);
         Collections.sort(submonoid, new Comparator<String>() {
             @Override

@@ -23,10 +23,10 @@ public class window {
     private static String[][] box;
     private static boolean isInterrupted=false;
 
-    private static final int DEFAULT_MAX_LENGTH = 6;
+    private static final int DEFAULT_MAX_LENGTH = 5;
     private static final int DEFAULT_LENGTH_1 = 15;
     private static final int DEFAULT_LENGTH_2 = 15;
-    private static final int MAX_SLEEPING_DURATION=6000;
+    private static final int DEFAULT_MAX_SLEEPING_DURATION=6;
     private static final int HEIGHT_OF_LINES = 50;
     private static final int MINIMUM_INPUT_LENGTH_VALUE=3, MINIMUM_VERTICAL_LENGTH=8, MINIMUM_HORIZONTAL_LENGTH=8;
 
@@ -53,15 +53,15 @@ public class window {
         JLabel labelMaxLength = new JLabel("Input Length:");
         inputMaxLength = new JFormattedTextField(DEFAULT_MAX_LENGTH);
         labelMaxLength.setBounds(XOFF,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
-        inputMaxLength.setBounds(XOFF+(WIDTH-2*XOFF)/6,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
+        inputMaxLength.setBounds(XOFF+(WIDTH-2*XOFF)/8,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES);
         image.add(inputMaxLength);
         image.add(labelMaxLength);
 
         //set first length input
         JFormattedTextField inputLength1=new JFormattedTextField(DEFAULT_LENGTH_1);
         JLabel labelLength1 = new JLabel("Horizontal Length:");
-        labelLength1.setBounds(XOFF+(WIDTH-2*XOFF)/6*2,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
-        inputLength1.setBounds(XOFF+(WIDTH-2*XOFF)/6*3,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
+        labelLength1.setBounds(XOFF+(WIDTH-2*XOFF)/8*2,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES);
+        inputLength1.setBounds(XOFF+(WIDTH-2*XOFF)/8*3,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES);
         image.add(inputLength1);
         image.add(labelLength1);
 
@@ -69,10 +69,19 @@ public class window {
         JFormattedTextField inputLength2;
         JLabel labelLength2 = new JLabel("Vertical Length:");
         inputLength2 = new JFormattedTextField(DEFAULT_LENGTH_2);
-        labelLength2.setBounds(XOFF+(WIDTH-2*XOFF)/6*4,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
-        inputLength2.setBounds(XOFF+(WIDTH-2*XOFF)/6*5,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/6,HEIGHT_OF_LINES);
+        labelLength2.setBounds(XOFF+(WIDTH-2*XOFF)/8*4,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES);
+        inputLength2.setBounds(XOFF+(WIDTH-2*XOFF)/8*5,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES);
         image.add(inputLength2);
         image.add(labelLength2);
+
+        //set duration timer
+        JFormattedTextField duration;
+        JLabel labelDuration = new JLabel("Duration of test:");
+        duration = new JFormattedTextField(DEFAULT_MAX_SLEEPING_DURATION);
+        labelDuration.setBounds(XOFF+(WIDTH-2*XOFF)/8*6,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES);
+        duration.setBounds(XOFF+(WIDTH-2*XOFF)/8*7,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES);
+        image.add(duration);
+        image.add(labelDuration);
 
         //set extra information
         for (int i=0;i<extrainformation.length;i++){
@@ -108,7 +117,7 @@ public class window {
             timer(()->{
                 setInputLength((int)inputMaxLength.getValue());
                 setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-                equal= Equals.findEqual(dias[answerChoosingAutomata],inputLength);
+                equal= Equals.findEquals(dias[answerChoosingAutomata],inputLength);
                 if(!isInterrupted){
                     textArea.setText("");
                     for(int i=0;i<equal.Size();i++) {
@@ -117,7 +126,7 @@ public class window {
                 }else{
                     isInterrupted=false;
                 }
-            },MAX_SLEEPING_DURATION);
+            },(int)duration.getValue()*1000);
         });
         image.add(btn[dea_dia.length]);
 
@@ -140,7 +149,7 @@ public class window {
                 }else{
                     isInterrupted=false;
                 }
-            },MAX_SLEEPING_DURATION);
+            },(int)duration.getValue()*1000);
         });
         image.add(btn[dea_dia.length+1]);
 
@@ -170,7 +179,7 @@ public class window {
                 }else{
                     isInterrupted=false;
                 }
-            },MAX_SLEEPING_DURATION);
+            },(int)duration.getValue()*1000);
         });
         image.add(btn[dea_dia.length+2]);
 
