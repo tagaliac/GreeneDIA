@@ -46,8 +46,8 @@ public class Submonoid {
         return raiseCounter(result,position+1,pow);
     }
 
-    //testversion
-    //Returns a List of Idempotents of "DIA" in "submonoid" that can be interchanged with "Word"
+    //Returns a List of Idempotents of "DIA" in "submonoid" that can be interchanged with "word"
+    //the function also puts "word" in the words of the "submonoid" to expand the search
     public static List<String> findALLIdempotents(DIA dia, List<String> submonoid, String word){
         Transition transition;
         List<String> result=new ArrayList<>();
@@ -55,7 +55,20 @@ public class Submonoid {
         boolean isIdempotent;
         String rest;
         for (int i=1;i<submonoid.size();i++){
+            //without changing the words
             rest=submonoid.get(i);
+            transition=dia.getTransitionWithString(rest);
+            isIdempotent=((transition.getImage().length-transition.getInfiniteCases().size())>0);
+            for (int j=0; j<transition.getImage().length; j++) {
+                if ((transition.getImage()[j]!=-1)&&(compare.getImage()[j]!=-1)
+                        &&(transition.getImage()[j]!=compare.getImage()[j])){
+                    isIdempotent=false;
+                }
+            }
+            if (isIdempotent) {
+                result.add(rest);
+            }
+            //with a change of words
             for(int k=0;k<rest.length()+1;k++) {
                 transition=dia.getTransitionWithString(Subsequence(rest, 0, k) + word + Subsequence(rest, k, rest.length()));
                 isIdempotent=((transition.getImage().length-transition.getInfiniteCases().size())>0);

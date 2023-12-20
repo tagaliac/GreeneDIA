@@ -6,7 +6,7 @@ import java.util.List;
 // creates an equal list that works as a hashtable
 // --key = a set of keys (as Strings)
 // --value = a set of value (as Strings)
-// kex and value must have the same size
+// key and value must have the same size
 public class EqualList {
     private List<String> key;
     private List<String> value;

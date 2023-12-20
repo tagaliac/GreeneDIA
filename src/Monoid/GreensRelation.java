@@ -107,7 +107,7 @@ public class GreensRelation {
                 }else{
                     reducedWord=ReduceWordL(w2,equalList.getKey().get(e),equalList.getValue().get(e),i);
                 }
-                if(reducedWord!=null&&reducedWord.length()<=w2.length()){
+                if(reducedWord!=null&&reducedWord.length()<=w2.length()&&!reducedWord.equalsIgnoreCase(w2)){
                     w2=reducedWord;
                     if(isToLeft&&isRrelation){
                         if(w2.equalsIgnoreCase(Submonoid.Subsequence(w1,0,w2.length()))){
@@ -115,10 +115,10 @@ public class GreensRelation {
                         }
                         break;
                     }else if(isToLeft){
-                            if(reverseString(w2).equalsIgnoreCase(Submonoid.Subsequence(reverseString(w1),0,w2.length()))) {
-                                return true;
-                            }
-                            break;
+                        if(reverseString(w2).equalsIgnoreCase(Submonoid.Subsequence(reverseString(w1),0,w2.length()))) {
+                            return true;
+                        }
+                        break;
                     }else{
                         if(w2.equalsIgnoreCase(w1)){
                             return true;

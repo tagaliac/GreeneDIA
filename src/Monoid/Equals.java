@@ -12,18 +12,18 @@ public class Equals {
     public static EqualList findEquals(DIA dia, int maxLength){
         List<String> submonoid = convertAlphabet(dia,maxLength);
         List<String> allIdempotent;
-        EqualList resultF =new EqualList();
+        EqualList result =new EqualList();
         String currentKey;
         for(int i=0;i<submonoid.size();i++){
             currentKey=submonoid.get(i);
             allIdempotent=findALLIdempotents(dia,submonoid,currentKey);
             for(String element:allIdempotent){
-                resultF.add(element,currentKey);
+                result.add(element,currentKey);
             }
         }
-        resultF=clearUnnecessaryEquals(resultF, 4);
-        Equals.sortbyValue(resultF);
-        return reverseMap(resultF);
+        result=clearUnnecessaryEquals(result, 4);
+        Equals.sortbyValue(result);
+        return reverseMap(result);
     }
 
     //Displays the monoid
