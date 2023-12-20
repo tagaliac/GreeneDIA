@@ -3,6 +3,7 @@ package Monoid;
 import Language.DIA;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Submonoid {
@@ -14,9 +15,9 @@ public class Submonoid {
         submonoid[0]="";
         for(int i=1;i<submonoid.length;i++){
             submonoid[i]="";
-            for( int j=0;j<count.length;j++){
-                if(count[j]!=0){
-                    submonoid[i]+=alphabet.get(count[j]-1);
+            for(int position:count) {
+                if (position!=0) {
+                    submonoid[i]+=alphabet.get(position-1);
                 }
             }
             count=raiseCounter(count,0, alphabet.size());
@@ -26,24 +27,21 @@ public class Submonoid {
 
     //Raises the counter-array of "createSubmonoid"-function
     private static int[] raiseCounter(int[] counter, int position, int pow){
-        int[] result=counter;
-        if(position>=result.length){
+        if(position>= counter.length){
             //Resets counter
-            for( int j=0;j<result.length;j++){
-                result[j]=0;
-            }
-            return result;
+            Arrays.fill(counter, 0);
+            return counter;
         }
-        if(result[position]>=pow){
+        if(counter[position]>=pow){
             if(position>0){
-                result[position]=0;
+                counter[position]=0;
             }
-            result[position]=1;
+            counter[position]=1;
         }else {
-            result[position]++;
-            return result;
+            counter[position]++;
+            return counter;
         }
-        return raiseCounter(result,position+1,pow);
+        return raiseCounter(counter,position+1,pow);
     }
 
     //Returns a List of Idempotents of "DIA" in "submonoid" that can be interchanged with "word"
@@ -99,11 +97,11 @@ public class Submonoid {
         for(int i=0;i<value.length();i++){
             characters[i] =value.charAt(i);
         }
-        String result="";
+        StringBuilder result= new StringBuilder();
         for(int i=Start;i<End;i++){
-            result+= characters[i];
+            result.append(characters[i]);
         }
-        return result;
+        return result.toString();
     }
 }
 

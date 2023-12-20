@@ -3,7 +3,6 @@ package Monoid;
 import Language.DIA;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -12,12 +11,12 @@ public class GreensRelation {
     private static String reverseString(String value){
         try{
             char letter;
-            String result="";
+            StringBuilder result= new StringBuilder();
             for (int i=0;i<value.length();i++){
                 letter=value.charAt(i);
-                result=letter+result;
+                result.insert(0, letter);
             }
-            return result;
+            return result.toString();
         }catch (NullPointerException e){
             return value;
         }
@@ -39,7 +38,7 @@ public class GreensRelation {
 
     //checks if the Relation "elementRcompare" is possible with the proper "equalList"
     private static boolean isR_Related(String element, String compare, EqualList equalList){
-        boolean Rleft=false,Rright;
+        boolean Rleft,Rright;
         String w1,w2;
         //w1 has to be the smaller word
         if(element.length()<=compare.length()){
@@ -52,7 +51,7 @@ public class GreensRelation {
         //checks if x exists in w1+x=w2
         if(w1.length()==0||w1.equalsIgnoreCase(Submonoid.Subsequence(w2,0,w1.length()))){
             Rleft=true;
-        }else if(w1.length()!=0){
+        }else{
             Rleft=Relatible(w1,w2,equalList,true,true);
         }
         //checks if x exists in w2+x=w1
@@ -67,7 +66,7 @@ public class GreensRelation {
 
     //checks if the Relation "elementLcompare" is possible with the proper "equalList"
     private static boolean isL_Related(String element, String compare, EqualList equalList){
-        boolean Lleft=false,Lright;
+        boolean Lleft,Lright;
         String w1,w2;
         //w1 has to be the smaller word
         if(element.length()<=compare.length()){
@@ -80,7 +79,7 @@ public class GreensRelation {
         //checks if x exists in x+w1=w2
         if(w1.length()==0||reverseString(w1).equalsIgnoreCase(Submonoid.Subsequence(reverseString(w2),0,w1.length()))){
             Lleft=true;
-        }else if(w1.length()!=0){
+        }else{
             Lleft=Relatible(w1,w2,equalList,false,true);
         }
         //checks if x exists in x+w2=w1
@@ -168,12 +167,7 @@ public class GreensRelation {
     public static String[][] getGreenBox(DIA dia, int maxLength){
         //gets and modifies all important variables
         List<String> submonoid= Equals.convertAlphabet(dia, maxLength);
-        Collections.sort(submonoid, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return o1.length()-o2.length();
-            }
-        });
+        submonoid.sort(Comparator.comparingInt(String::length));
         EqualList equal=Equals.findEquals(dia, maxLength);
         String[][] result=new String[submonoid.size()][submonoid.size()];
         List<String> Rlist=new ArrayList<>();
@@ -263,9 +257,7 @@ public class GreensRelation {
     private static String[][] reduceSizeOfGreenBox(String[][] greenbox, int height, int length){
         String[][] result = new String[height][length];
         for(int i=0;i<result.length;i++){
-            for(int j=0;j<result[i].length;j++){
-                result[i][j]=greenbox[i][j];
-            }
+            System.arraycopy(greenbox[i], 0, result[i], 0, result[i].length);
         }
         return result;
     }
@@ -277,12 +269,7 @@ public class GreensRelation {
         List<String> submonoid= Equals.convertAlphabet(dia, maxLength);
         EqualList equal=Equals.findEquals(dia, maxLength);
         submonoid=removeEqualsFromMonoid(submonoid,equal);
-        Collections.sort(submonoid, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return o1.length()-o2.length();
-            }
-        });
+        submonoid.sort(Comparator.comparingInt(String::length));
         boolean newElement;
         for(String element:submonoid){
             newElement=true;

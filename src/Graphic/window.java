@@ -13,11 +13,11 @@ import javax.swing.*;
 public class window {
     public static JFrame image=new JFrame("GreeneDIA");
     public final static int WIDTH=1000,HEIGHT=1000,XOFF=50,YOFF=100;
-    private static JTextArea textArea=new JTextArea();
-    private static JTextField[] extrainformation=new JTextField[2];
+    private static final JTextArea textArea=new JTextArea();
+    private static final JTextField[] extrainformation=new JTextField[2];
     private static final String[] dea_dia = new String[5];
     public static JButton[] btn=new JButton[dea_dia.length+3];
-    private static DIA[] dias=new DIA[dea_dia.length];
+    private static final DIA[] dias=new DIA[dea_dia.length];
     private static int answerChoosingAutomata,inputLength;
     private static EqualList equal;
     private static String[][] box;
@@ -113,74 +113,68 @@ public class window {
         //sets equal-button
         btn[dea_dia.length]=new JButton("Equals");
         btn[dea_dia.length].setBounds(XOFF,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/3,HEIGHT_OF_LINES);
-        btn[dea_dia.length].addActionListener(e -> {
-            timer(()->{
-                setInputLength((int)inputMaxLength.getValue());
-                setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-                equal= Equals.findEquals(dias[answerChoosingAutomata],inputLength);
-                if(!isInterrupted){
-                    textArea.setText("");
-                    for(int i=0;i<equal.Size();i++) {
-                        textArea.append(equal.getEntry(i) + "\n");
-                    }
-                }else{
-                    isInterrupted=false;
+        btn[dea_dia.length].addActionListener(e -> timer(()->{
+            setInputLength((int)inputMaxLength.getValue());
+            setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
+            equal= Equals.findEquals(dias[answerChoosingAutomata],inputLength);
+            if(!isInterrupted){
+                textArea.setText("");
+                for(int i=0;i<equal.Size();i++) {
+                    textArea.append(equal.getEntry(i) + "\n");
                 }
-            },(int)duration.getValue()*1000);
-        });
+            }else{
+                isInterrupted=false;
+            }
+        },(int)duration.getValue()*1000));
         image.add(btn[dea_dia.length]);
 
         //sets box-button
         btn[dea_dia.length+1]=new JButton("Green's Box");
         btn[dea_dia.length+1].setBounds(XOFF+(WIDTH-2*XOFF)/3,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/3,HEIGHT_OF_LINES);
-        btn[dea_dia.length+1].addActionListener(e -> {
-            timer(()->{
-                setInputLength((int)inputMaxLength.getValue());
-                setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-                box= GreensRelation.getGreenBox(dias[answerChoosingAutomata],inputLength);
-                if(!isInterrupted){
-                    textArea.setText("");
-                    for(int i=0;i<box.length;i++) {
-                        for (int j=0;j<box[i].length;j++){
-                            textArea.append(box[i][j] + " ");
-                        }
-                        textArea.append("\n");
+        btn[dea_dia.length+1].addActionListener(e -> timer(()->{
+            setInputLength((int)inputMaxLength.getValue());
+            setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
+            box= GreensRelation.getGreenBox(dias[answerChoosingAutomata],inputLength);
+            if(!isInterrupted){
+                textArea.setText("");
+                for (String[] strings:box) {
+                    for (String string:strings) {
+                        textArea.append(string + " ");
                     }
-                }else{
-                    isInterrupted=false;
+                    textArea.append("\n");
                 }
-            },(int)duration.getValue()*1000);
-        });
+            }else{
+                isInterrupted=false;
+            }
+        },(int)duration.getValue()*1000));
         image.add(btn[dea_dia.length+1]);
 
         //sets H-CLass-button
         btn[dea_dia.length+2]=new JButton("H Class");
         btn[dea_dia.length+2].setBounds(XOFF+(WIDTH-2*XOFF)/3*2,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/3,HEIGHT_OF_LINES);
-        btn[dea_dia.length+2].addActionListener(event -> {
-            timer(()->{
-                setInputLength((int)inputMaxLength.getValue());
-                setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-                List<List<String>> HClasses=GreensRelation.getHValues(dias[answerChoosingAutomata],inputLength);
-                if(!isInterrupted){
-                    if(!HClasses.isEmpty()){
-                        textArea.setText("");
-                        for(List<String> HCLass:HClasses) {
-                            if(HCLass.size()<=1){
-                                continue;
-                            }
-                            for (String element:HCLass){
-                                textArea.append(element+"<->");
-                            }
-                            textArea.append("\n");
+        btn[dea_dia.length+2].addActionListener(event -> timer(()->{
+            setInputLength((int)inputMaxLength.getValue());
+            setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
+            List<List<String>> HClasses=GreensRelation.getHValues(dias[answerChoosingAutomata],inputLength);
+            if(!isInterrupted){
+                if(!HClasses.isEmpty()){
+                    textArea.setText("");
+                    for(List<String> HCLass:HClasses) {
+                        if(HCLass.size()<=1){
+                            continue;
                         }
-                    }else{
-                        textArea.setText("Nothing");
+                        for (String element:HCLass){
+                            textArea.append(element+"<->");
+                        }
+                        textArea.append("\n");
                     }
                 }else{
-                    isInterrupted=false;
+                    textArea.setText("Nothing");
                 }
-            },(int)duration.getValue()*1000);
-        });
+            }else{
+                isInterrupted=false;
+            }
+        },(int)duration.getValue()*1000));
         image.add(btn[dea_dia.length+2]);
 
         //sets background image
@@ -215,27 +209,17 @@ public class window {
 
     //Sets the input Length
     private static void setInputLength(int value){
-        if(value<MINIMUM_INPUT_LENGTH_VALUE){
-            inputLength=MINIMUM_INPUT_LENGTH_VALUE;
-        }else{
-            inputLength=value;
-        }
+        inputLength = Math.max(value, MINIMUM_INPUT_LENGTH_VALUE);
     }
 
     //Sets the vertical Length
     private static int setVerticalLength(int value){
-        if(value<MINIMUM_VERTICAL_LENGTH){
-            return MINIMUM_VERTICAL_LENGTH;
-        }
-        return value;
+        return Math.max(value, MINIMUM_VERTICAL_LENGTH);
     }
 
     //Sets the horizontal Length
     private static int setHorizontalLength(int value){
-        if(value<MINIMUM_HORIZONTAL_LENGTH){
-            return MINIMUM_HORIZONTAL_LENGTH;
-        }
-        return value;
+        return Math.max(value, MINIMUM_HORIZONTAL_LENGTH);
     }
 
     //Starts the action "runnable" for a duration of "timeInMilliSecond"

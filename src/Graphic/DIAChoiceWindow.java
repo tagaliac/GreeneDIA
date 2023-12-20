@@ -11,16 +11,16 @@ import java.util.List;
 public class DIAChoiceWindow {
     public static JFrame image=new JFrame("Choose DIA");
     private static final int WIDTH=700,HEIGHT=800,XOFF=50,YOFF=100, YCAPTION=50, HEIGHT_OF_LINES = 50;
-    private static JFormattedTextField[] textFields=new JFormattedTextField[7];
-    private static Label[] labels=new Label[7];
-    private static JButton btn[]=new JButton[4];
+    private static final JFormattedTextField[] textFields=new JFormattedTextField[7];
+    private static final Label[] labels=new Label[7];
+    private static final JButton[] btn =new JButton[4];
     private static DIA result;
     private static int states, beginningState;
-    private static List<Integer> finalStates=new ArrayList<>(),infiniteStates=new ArrayList<>();
-    private static List<Character> alphabet=new ArrayList<>();
-    private static List<TransferFunction> transferFunctions=new ArrayList<>();
-    private static TextArea functionList=new TextArea();
-    private static Label[] basicInfo =new Label[4];
+    private static final List<Integer> finalStates=new ArrayList<>(), infiniteStates=new ArrayList<>();
+    private static final List<Character> alphabet=new ArrayList<>();
+    private static final List<TransferFunction> transferFunctions=new ArrayList<>();
+    private static final TextArea functionList=new TextArea();
+    private static final Label[] basicInfo =new Label[4];
 
     public static void setImage(){
         //define image
@@ -38,8 +38,8 @@ public class DIAChoiceWindow {
             textFields[5]=new JFormattedTextField("0,a,0");
             textFields[6]=new JFormattedTextField("");
         }
-        for(int i=0;i<textFields.length;i++){
-            image.add(textFields[i]);
+        for (JFormattedTextField textField:textFields) {
+            image.add(textField);
         }
         for(int i=0;i<labels.length;i++){
             labels[i]=new Label();
@@ -112,13 +112,13 @@ public class DIAChoiceWindow {
                 if(alphabet.isEmpty()){
                     throw new NullPointerException("alphabet");
                 }
-                String[] finalstates= ((String)textFields[3].getValue()).split(",");
-                for(int i=0;i<finalstates.length;i++){
-                    finalStates.add(Integer.valueOf(finalstates[i]));
+                String[] final_states= ((String)textFields[3].getValue()).split(",");
+                for (String final_state:final_states) {
+                    finalStates.add(Integer.valueOf(final_state));
                 }
-                String[] infinitestates= ((String)textFields[4].getValue()).split(",");
-                for(int i=0;i<infinitestates.length;i++){
-                    infiniteStates.add(Integer.valueOf(infinitestates[i]));
+                String[] infinite_states= ((String)textFields[4].getValue()).split(",");
+                for (String infinite_state:infinite_states) {
+                    infiniteStates.add(Integer.valueOf(infinite_state));
                 }
                 result=new DIA(states,alphabet,transferFunctions,beginningState,finalStates,infiniteStates);
                 labels[6].setText("DIA is set");

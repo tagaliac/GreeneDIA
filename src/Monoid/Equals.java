@@ -22,15 +22,15 @@ public class Equals {
             }
         }
         result=clearUnnecessaryEquals(result, 4);
-        Equals.sortbyValue(result);
+        Equals.sortByValue(result);
         return reverseMap(result);
     }
 
     //Displays the monoid
     //It exists for testing
     public static void DisplayMonoid(List<String> monoid){
-        for(int i=0;i< monoid.size();i++){
-            System.out.print("["+monoid.get(i)+"]");
+        for (String entry:monoid) {
+            System.out.print("["+entry+"]");
         }
     }
 
@@ -38,9 +38,7 @@ public class Equals {
     public static List<String> convertAlphabet(DIA dia, int maxLength){
         List<String> result =new ArrayList<>();
         String[] array =createSubmonoid(dia.getAlphabet(),maxLength);
-        for(int i=0;i<array.length;i++){
-            result.add(array[i]);
-        }
+        Collections.addAll(result, array);
         Collections.sort(result);
         return result;
     }
@@ -95,7 +93,10 @@ public class Equals {
     }
 
     //It sorts the "equalList" by the size of the values
-    public static void sortbyValue(EqualList equalList){
+    public static void sortByValue(EqualList equalList){
+        if(equalList.isEmpty()){
+            return;
+        }
         int i=equalList.Size()-1;
         int length=equalList.getValue().get(i).length();
         while(i>0){

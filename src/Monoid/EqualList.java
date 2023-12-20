@@ -8,8 +8,8 @@ import java.util.List;
 // --value = a set of value (as Strings)
 // key and value must have the same size
 public class EqualList {
-    private List<String> key;
-    private List<String> value;
+    private final List<String> key;
+    private final List<String> value;
 
     public EqualList(List<String> keys, List<String> values) {
         this.key = keys;
@@ -70,6 +70,7 @@ public class EqualList {
         return !(this.Size()>0);
     }
 
+    //For testing
     //Displays the entry at position
     public void display(int position){
         System.out.print("("+key.get(position)+"/"+value.get(position)+")\n");

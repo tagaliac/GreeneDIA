@@ -69,14 +69,12 @@ public class DEA {
     }
 
     //Sets all States to self loop every letter
-    private List<TransferFunction> InitiateTransferFunctions(int amounthOfStates, List<Character> alphabet){
-        List<TransferFunction> result = new ArrayList<>();
+    private void InitiateTransferFunctions(int amounthOfStates, List<Character> alphabet){
         for(int i=0;i<amounthOfStates;i++){
             for(Character letter:alphabet){
-                result.add(new TransferFunction(i,letter,i));
+                ChangeTransfer(new TransferFunction(i,letter,i));
             }
         }
-        return result;
     }
 
     //Changes transfer function of DEA
@@ -87,23 +85,23 @@ public class DEA {
         if(!alphabet.contains(transfer.getTransmissionValue())){
             throw new NullPointerException("the Character : "+transfer.getTransmissionValue()+" does not exists");
         }
-        for (int i=0;i<states.size();i++){
-            if(states.get(i).getID()==transfer.getStartStateID()){
-                StartState=states.get(i);
+        for (Language.state state:states) {
+            if (state.getID()==transfer.getStartStateID()) {
+                StartState=state;
                 break;
             }
         }
-        for (int i=0;i<states.size();i++){
-            if(states.get(i).getID()==transfer.getEndStateID()){
-                EndState=states.get(i);
+        for (Language.state state:states) {
+            if (state.getID()==transfer.getEndStateID()) {
+                EndState=state;
                 break;
             }
         }
         if(StartState==null){
-            throw new NullPointerException("the startstate with the ID: "+transfer.getStartStateID()+" does not exists");
+            throw new NullPointerException("the start state with the ID: "+transfer.getStartStateID()+" does not exists");
         }
         if(EndState==null){
-            throw new NullPointerException("the endstate with the ID: "+transfer.getEndStateID()+" does not exists");
+            throw new NullPointerException("the end state with the ID: "+transfer.getEndStateID()+" does not exists");
         }
 
         //coding
@@ -114,8 +112,8 @@ public class DEA {
     public int ProcessWord(String word){
         char[] wordChar = word.toCharArray();
         state currentState = GetState(IDOfStartState);
-        for (int i=0; i<wordChar.length;i++){
-            currentState = GetState(currentState.process(wordChar[i]));
+        for (char letter:wordChar) {
+            currentState = GetState(currentState.process(letter));
         }
         return currentState.getID();
     }
@@ -123,8 +121,8 @@ public class DEA {
     //Process the word "word" in the DEA and checks if the word will be accepted
     public boolean acceptWord(String word){
         int ID = ProcessWord(word);
-        for (int i=0;i<IDsOfFinalStates.size();i++){
-            if(IDsOfFinalStates.get(i)==ID){
+        for (Integer iDsOfFinalState:IDsOfFinalStates) {
+            if (iDsOfFinalState==ID) {
                 return true;
             }
         }
@@ -154,10 +152,10 @@ public class DEA {
         return new Transition(states.size(),transferFunctions);
     }
 
-    //returns the Transition of the whole charsequence "word"
+    //returns the Transition of the whole char-sequence "word"
     public Transition getTransitionWithString(String word){
         //checks empty word
-        if(word==""||word==" "){
+        if(word.equalsIgnoreCase("")||word.equalsIgnoreCase(" ")){
             return new Transition(states.size());
         }
         //the algorithm

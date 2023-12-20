@@ -24,7 +24,7 @@ public class Main {
     public static DEA createFiniteTestDEA(){
         List<Character> alphabet = new ArrayList<>();
         List<TransferFunction> transferFunctions = new ArrayList<>();
-        List<Integer> finalstates = new ArrayList<>();
+        List<Integer> finalStates = new ArrayList<>();
 
         //define alphabet
         alphabet.add('a');
@@ -54,16 +54,16 @@ public class Main {
         transferFunctions.add(new TransferFunction(3,'d',2));
 
         //define final states
-        finalstates.add(3);
+        finalStates.add(3);
 
         //define dea
-        return new DEA(3, alphabet, transferFunctions, 0, finalstates);
+        return new DEA(3, alphabet, transferFunctions, 0, finalStates);
     }
 
     public static DIA createDyck(int length) {
         List<Character> alphabet = new ArrayList<>();
         List<TransferFunction> transferFunctions = new ArrayList<>();
-        List<Integer> finalstates = new ArrayList<>();
+        List<Integer> finalStates = new ArrayList<>();
 
         //define alphabet
         alphabet.add('a');
@@ -82,11 +82,11 @@ public class Main {
         transferFunctions.add(new TransferFunction(length - 1, 'b', length - 2));
 
         //define final states
-        finalstates.add(1);
+        finalStates.add(1);
 
         List<Integer> InfiniteStates = new ArrayList<>();
         InfiniteStates.add(length - 1);
-        return new DIA(length, alphabet, transferFunctions, 1, finalstates, InfiniteStates);
+        return new DIA(length, alphabet, transferFunctions, 1, finalStates, InfiniteStates);
     }
 
 
@@ -96,7 +96,7 @@ public class Main {
         }
         List<Character> alphabet = new ArrayList<>();
         List<TransferFunction> transferFunctions = new ArrayList<>();
-        List<Integer> finalstates = new ArrayList<>();
+        List<Integer> finalStates = new ArrayList<>();
 
         //define alphabet
         alphabet.add('a');
@@ -127,12 +127,12 @@ public class Main {
         transferFunctions.add(new TransferFunction(length+2,'b',length+1));
 
         //define final states
-        finalstates.add(3);
+        finalStates.add(3);
 
         //define dia
         List<Integer> InfiniteStates=new ArrayList<>();
         InfiniteStates.add(length+2);
-        return new DIA(length+3,alphabet,transferFunctions,1,finalstates,InfiniteStates);
+        return new DIA(length+3,alphabet,transferFunctions,1,finalStates,InfiniteStates);
     }
 
     public static DIA createHAnd(int length1,int length2){
@@ -142,8 +142,8 @@ public class Main {
 
         List<Character> alphabet = new ArrayList<>();
         List<TransferFunction> transferFunctions = new ArrayList<>();
-        List<Integer> finalstates = new ArrayList<>();
-        List<Integer> InfinitieStates = new ArrayList<>();
+        List<Integer> finalStates = new ArrayList<>();
+        List<Integer> infiniteStates = new ArrayList<>();
 
         //define alphabet
         alphabet.add('a');
@@ -172,7 +172,7 @@ public class Main {
             }else if((i-2)%length2==length2-1){
                 transferFunctions.add(new TransferFunction(i,'a',i));
                 transferFunctions.add(new TransferFunction(i,'b',i-1));
-                InfinitieStates.add(i);
+                infiniteStates.add(i);
             }else{
                 transferFunctions.add(new TransferFunction(i,'a',i+1));
                 transferFunctions.add(new TransferFunction(i,'b',i-1));
@@ -183,14 +183,14 @@ public class Main {
             if((i-2)%length2==0){
                 transferFunctions.add(new TransferFunction(i,'a',i));
                 transferFunctions.add(new TransferFunction(i,'b',i-length2+1));
-                InfinitieStates.add(i);
+                infiniteStates.add(i);
             }else if((i-2)%length2==1){
                 transferFunctions.add(new TransferFunction(i,'a',i+1));
                 transferFunctions.add(new TransferFunction(i,'b',i-length2-1));
             }else if((i-2)%length2==length2-1){
                 transferFunctions.add(new TransferFunction(i,'a',i));
                 transferFunctions.add(new TransferFunction(i,'b',i-1));
-                InfinitieStates.add(i);
+                infiniteStates.add(i);
             }else{
                 transferFunctions.add(new TransferFunction(i,'a',i+1));
                 transferFunctions.add(new TransferFunction(i,'b',i-1));
@@ -198,10 +198,10 @@ public class Main {
         }
 
         //define final states
-        finalstates.add(1);
+        finalStates.add(1);
 
         //transform
-        return new DIA(length1*length2+2, alphabet, transferFunctions, 1, finalstates,InfinitieStates);
+        return new DIA(length1*length2+2, alphabet, transferFunctions, 1, finalStates,infiniteStates);
     }
 
     public static DIA createHOr(int length1,int length2){
@@ -211,8 +211,8 @@ public class Main {
 
         List<Character> alphabet = new ArrayList<>();
         List<TransferFunction> transferFunctions = new ArrayList<>();
-        List<Integer> finalstates = new ArrayList<>();
-        List<Integer> InfinitieStates = new ArrayList<>();
+        List<Integer> finalStates = new ArrayList<>();
+        List<Integer> infiniteStates = new ArrayList<>();
 
         //define alphabet
         alphabet.add('a');
@@ -236,7 +236,7 @@ public class Main {
                 transferFunctions.add(new TransferFunction(i,'a',i+1));
                 transferFunctions.add(new TransferFunction(i,'b',i-length2-1));
             }else if((i-1)%length2==length2-1){
-                InfinitieStates.add(i);
+                infiniteStates.add(i);
                 transferFunctions.add(new TransferFunction(i,'a',i));
                 transferFunctions.add(new TransferFunction(i,'b',i-1));
             }else{
@@ -247,19 +247,19 @@ public class Main {
 
         for(int i=length1*length2-length2+1;i<length1*length2+3;i++){
             if((i-1)%length2==0){
-                InfinitieStates.add(i);
+                infiniteStates.add(i);
                 transferFunctions.add(new TransferFunction(i,'a',i));
                 transferFunctions.add(new TransferFunction(i,'b',i-length2+1));
             }else if((i-1)%length2==1){
                 if(i==length1*length2+2){
-                    InfinitieStates.add(i);
+                    infiniteStates.add(i);
                     transferFunctions.add(new TransferFunction(i,'a',i));
                 }else{
                     transferFunctions.add(new TransferFunction(i,'a',i+1));
                 }
                 transferFunctions.add(new TransferFunction(i,'b',i-length2-1));
             }else if((i-1)%length2==length2-1){
-                InfinitieStates.add(i);
+                infiniteStates.add(i);
                 transferFunctions.add(new TransferFunction(i,'a',i));
                 transferFunctions.add(new TransferFunction(i,'b',i-1));
             }else{
@@ -269,17 +269,17 @@ public class Main {
         }
 
         //define final states
-        finalstates.add(2);
+        finalStates.add(2);
 
         //define dea
-        return new DIA(length1*length2+3, alphabet, transferFunctions, 1, finalstates,InfinitieStates);
+        return new DIA(length1*length2+3, alphabet, transferFunctions, 1, finalStates,infiniteStates);
     }
 
     public static DIA createDyckWithoutEmpty(int length){
         List<Character> alphabet = new ArrayList<>();
         List<TransferFunction> transferFunctions = new ArrayList<>();
-        List<Integer> finalstates = new ArrayList<>();
-        List<Integer> InfinitieStates = new ArrayList<>();
+        List<Integer> finalStates = new ArrayList<>();
+        List<Integer> InfiniteStates = new ArrayList<>();
 
         //define alphabet
         alphabet.add('a');
@@ -298,23 +298,22 @@ public class Main {
         transferFunctions.add(new TransferFunction(length - 1, 'b', length - 2));
 
         //define final states
-        finalstates.add(0);
+        finalStates.add(0);
 
-        List<Integer> InfiniteStates = new ArrayList<>();
         InfiniteStates.add(length - 1);
-        return new DIA(length, alphabet, transferFunctions, 0, finalstates, InfiniteStates);
+        return new DIA(length, alphabet, transferFunctions, 0, finalStates, InfiniteStates);
     }
 
     //Prints the list "stringList" in lines with maximum Size "sizeOfLine"
     //It exists for testing
     public static void PrintList(List<String> StringList,int sizeOfLine){
         int count=0;
-        for(int i=0;i<StringList.size();i++){
-            System.out.print(StringList.get(i));
-            if(count>=sizeOfLine){
-                count=0;
+        for (String s : StringList) {
+            System.out.print(s);
+            if (count >= sizeOfLine) {
+                count = 0;
                 System.out.print("\n");
-            }else{
+            } else {
                 count++;
             }
         }

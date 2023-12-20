@@ -34,7 +34,7 @@ public class Transition {
         Image = new int[amounthOfElements];
         Kern = new List[amounthOfElements];
         for(int i=0;i< Kern.length;i++){
-            Kern[i] = new ArrayList<Integer>();
+            Kern[i] = new ArrayList<>();
         }
         for(int i=0;i< transitionFunctions.size();i++){
             if(!((amounthOfElements>(transitionFunctions.get(i).getStartStateID())||transitionFunctions.get(i).getStartStateID()<-1)
@@ -48,7 +48,7 @@ public class Transition {
             Image[i]= transitionFunctions.get(i).getEndStateID();
             try{
                 Kern[transitionFunctions.get(i).getEndStateID()].add(transitionFunctions.get(i).getStartStateID());
-            }catch (IndexOutOfBoundsException e){
+            }catch (IndexOutOfBoundsException ignored){
 
             }
         }
@@ -134,6 +134,7 @@ public class Transition {
         this.infiniteCases = infiniteCases;
     }
 
+    //for testing
     //Displays all mappings
     public void display(){
         System.out.print("(");

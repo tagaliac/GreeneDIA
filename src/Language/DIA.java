@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // creates Deterministic Infinite Automata
-// Inherites DEA
+// Inherits DEA
 // --IDOfInfiniteStates: the set of ids of the state that continue infinitely (must be in {0,...,states})
 public class DIA extends DEA{
     List<Integer> infiniteStates;
@@ -27,8 +27,9 @@ public class DIA extends DEA{
         for (int infinite:this.infiniteStates){
             result=false;
             for(state state:this.states){
-                if(infinite==state.getID()){
-                    result=true;
+                if (infinite==state.getID()) {
+                    result = true;
+                    break;
                 }
             }
             if(!result){
@@ -57,10 +58,10 @@ public class DIA extends DEA{
         return infiniteStates;
     }
 
-    //returns the Transition of the whole charsequence "word"
+    //returns the Transition of the whole char-sequence "word"
     public Transition getTransitionWithString(String word){
         //checks empty word
-        if(word==""||word==" "){
+        if(word.equalsIgnoreCase("")||word.equalsIgnoreCase(" ")){
             return new Transition(states.size());
         }
         //the algorithm
