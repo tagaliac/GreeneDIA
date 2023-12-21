@@ -9,14 +9,14 @@ import static Monoid.Submonoid.*;
 public class Equals {
     //returns a List with entries of words that can be interchanged in the DIA "dia" at same entry position
     //--maxLength: the maximum length of the words
-    public static EqualList findEquals(DIA dia, int maxLength){
+    public static EqualList findEquals(DIA dia, int maxLength, boolean expandSearch){
         List<String> submonoid = convertAlphabet(dia,maxLength);
         List<String> allIdempotent;
         EqualList result =new EqualList();
         String currentKey;
         for(int i=0;i<submonoid.size();i++){
             currentKey=submonoid.get(i);
-            allIdempotent=findALLIdempotents(dia,submonoid,currentKey);
+            allIdempotent=findALLIdempotents(dia,submonoid,currentKey, expandSearch);
             for(String element:allIdempotent){
                 result.add(element,currentKey);
             }

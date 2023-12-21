@@ -14,7 +14,7 @@ public class window {
     public static JFrame image=new JFrame("GreeneDIA");
     public final static int WIDTH=1000,HEIGHT=1000,XOFF=50,YOFF=100;
     private static final JTextArea textArea=new JTextArea();
-    private static final JTextField[] extrainformation=new JTextField[2];
+    private static final JTextField[] extrainformation=new JTextField[3];
     private static final String[] dea_dia = new String[5];
     public static JButton[] btn=new JButton[dea_dia.length+3];
     private static final DIA[] dias=new DIA[dea_dia.length];
@@ -22,6 +22,7 @@ public class window {
     private static EqualList equal;
     private static String[][] box;
     private static boolean isInterrupted=false;
+    private static final JCheckBox expandSearch= new JCheckBox("expand search");
 
     private static final int DEFAULT_MAX_LENGTH = 5;
     private static final int DEFAULT_LENGTH_1 = 15;
@@ -78,10 +79,15 @@ public class window {
         JFormattedTextField duration;
         JLabel labelDuration = new JLabel("Duration of test:");
         duration = new JFormattedTextField(DEFAULT_MAX_SLEEPING_DURATION);
-        labelDuration.setBounds(XOFF+(WIDTH-2*XOFF)/8*6,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES);
-        duration.setBounds(XOFF+(WIDTH-2*XOFF)/8*7,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES);
+        labelDuration.setBounds(XOFF+(WIDTH-2*XOFF)/8*6,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES/2);
+        duration.setBounds(XOFF+(WIDTH-2*XOFF)/8*7,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES/2);
         image.add(duration);
         image.add(labelDuration);
+
+        //set expand search
+        expandSearch.setBounds(XOFF+(WIDTH-2*XOFF)/8*6,YOFF+HEIGHT_OF_LINES*2+HEIGHT_OF_LINES/2,(WIDTH-2*XOFF)/8*2,HEIGHT_OF_LINES/2);
+        expandSearch.setSelected(true);
+        image.add(expandSearch);
 
         //set extra information
         for (int i=0;i<extrainformation.length;i++){
@@ -89,10 +95,12 @@ public class window {
             extrainformation[i].setEditable(false);
             image.add(extrainformation[i]);
         }
-        extrainformation[0].setBounds(XOFF,YOFF+HEIGHT_OF_LINES*3,WIDTH-2*XOFF,HEIGHT_OF_LINES/2);
-        extrainformation[1].setBounds(XOFF,YOFF+HEIGHT_OF_LINES*3+HEIGHT_OF_LINES/2,WIDTH-2*XOFF,HEIGHT_OF_LINES/2);
+        for(int i=0;i<extrainformation.length;i++){
+            extrainformation[i].setBounds(XOFF,YOFF+HEIGHT_OF_LINES*3+HEIGHT_OF_LINES/2*i,WIDTH-2*XOFF,HEIGHT_OF_LINES/2);
+        }
         extrainformation[0].setText("It is recommended to set \"Horizontal Length\"=\"Vertical Length\"=\"3*Input Length\". Input Length can be minimum "+MINIMUM_INPUT_LENGTH_VALUE+".");
         extrainformation[1].setText("Horizontal Length can be minimum "+MINIMUM_HORIZONTAL_LENGTH+"."+" Vertical Length can be minimum "+MINIMUM_VERTICAL_LENGTH+".");
+        extrainformation[2].setText("Expand search does search for more equals. The calculations are more accurate but require more calculation time");
 
         //set DIA definition buttons
         for(int i=0;i<dea_dia.length;i++){
@@ -106,7 +114,7 @@ public class window {
         JScrollPane scroll = (new JScrollPane(textArea));
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scroll.setBounds(XOFF,YOFF+HEIGHT_OF_LINES*4,WIDTH-2*XOFF,HEIGHT-2*YOFF-200);
+        scroll.setBounds(XOFF,YOFF+HEIGHT_OF_LINES*5,WIDTH-2*XOFF,HEIGHT-2*YOFF-200);
         textArea.setEditable(true);
         image.getContentPane().add(scroll);
 
@@ -116,7 +124,7 @@ public class window {
         btn[dea_dia.length].addActionListener(e -> timer(()->{
             setInputLength((int)inputMaxLength.getValue());
             setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-            equal= Equals.findEquals(dias[answerChoosingAutomata],inputLength);
+            equal= Equals.findEquals(dias[answerChoosingAutomata],inputLength, expandSearch.isSelected());
             if(!isInterrupted){
                 textArea.setText("");
                 for(int i=0;i<equal.Size();i++) {
@@ -134,7 +142,7 @@ public class window {
         btn[dea_dia.length+1].addActionListener(e -> timer(()->{
             setInputLength((int)inputMaxLength.getValue());
             setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-            box= GreensRelation.getGreenBox(dias[answerChoosingAutomata],inputLength);
+            box= GreensRelation.getGreenBox(dias[answerChoosingAutomata],inputLength, expandSearch.isSelected());
             if(!isInterrupted){
                 textArea.setText("");
                 for (String[] strings:box) {
@@ -155,7 +163,7 @@ public class window {
         btn[dea_dia.length+2].addActionListener(event -> timer(()->{
             setInputLength((int)inputMaxLength.getValue());
             setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-            List<List<String>> HClasses=GreensRelation.getHValues(dias[answerChoosingAutomata],inputLength);
+            List<List<String>> HClasses=GreensRelation.getHValues(dias[answerChoosingAutomata],inputLength, expandSearch.isSelected());
             if(!isInterrupted){
                 if(!HClasses.isEmpty()){
                     textArea.setText("");

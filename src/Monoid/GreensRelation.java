@@ -164,11 +164,11 @@ public class GreensRelation {
 
     //Returns the Green Box of the "dia" with the maximum length "maxLength"
     //The results are saved as an array-matrix of strings
-    public static String[][] getGreenBox(DIA dia, int maxLength){
+    public static String[][] getGreenBox(DIA dia, int maxLength, boolean expandSearch){
         //gets and modifies all important variables
         List<String> submonoid= Equals.convertAlphabet(dia, maxLength);
         submonoid.sort(Comparator.comparingInt(String::length));
-        EqualList equal=Equals.findEquals(dia, maxLength);
+        EqualList equal=Equals.findEquals(dia, maxLength, expandSearch);
         String[][] result=new String[submonoid.size()][submonoid.size()];
         List<String> Rlist=new ArrayList<>();
         List<String> Llist=new ArrayList<>();
@@ -264,10 +264,10 @@ public class GreensRelation {
 
     //Returns a list of element that are H-Related
     //Each element of a sublist ist H-Related to the others
-    public static List<List<String>> getHValues(DIA dia, int maxLength){
+    public static List<List<String>> getHValues(DIA dia, int maxLength, boolean expandSearch){
         List<List<String>> result=new ArrayList<>();
         List<String> submonoid= Equals.convertAlphabet(dia, maxLength);
-        EqualList equal=Equals.findEquals(dia, maxLength);
+        EqualList equal=Equals.findEquals(dia, maxLength, expandSearch);
         submonoid=removeEqualsFromMonoid(submonoid,equal);
         submonoid.sort(Comparator.comparingInt(String::length));
         boolean newElement;

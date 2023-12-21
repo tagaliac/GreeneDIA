@@ -77,7 +77,7 @@ public class EqualList {
     }
 
     //Returns the entry at position
-    public String getEntry (int position){
+    public String getEntry(int position){
         String Key, Value;
         if (value.get(position).equalsIgnoreCase("")){
             Value="\u03BB";
@@ -90,12 +90,5 @@ public class EqualList {
             Key=key.get(position);
         }
         return "["+Key+"="+Value+"]";
-    }
-
-    //Append "equalList"
-    public void append(EqualList equalList){
-        for(int i=0;i<equalList.Size();i++){
-            this.add(equalList.getKey().get(i),equalList.getValue().get(i));
-        }
     }
 }
