@@ -4,6 +4,7 @@ import Default.Main;
 import Language.DIA;
 import Monoid.EqualList;
 import Monoid.Equals;
+import Monoid.GreenRelations;
 import Monoid.GreensRelation;
 
 import java.awt.Color;
@@ -142,7 +143,7 @@ public class window {
         btn[dea_dia.length+1].addActionListener(e -> timer(()->{
             setInputLength((int)inputMaxLength.getValue());
             setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-            box= GreensRelation.getGreenBox(dias[answerChoosingAutomata],inputLength, expandSearch.isSelected());
+            box= GreenRelations.getGreenBoxWithoutEqual(dias[answerChoosingAutomata], inputLength, expandSearch.isSelected());
             if(!isInterrupted){
                 textArea.setText("");
                 for (String[] strings:box) {
@@ -163,7 +164,7 @@ public class window {
         btn[dea_dia.length+2].addActionListener(event -> timer(()->{
             setInputLength((int)inputMaxLength.getValue());
             setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-            List<List<String>> HClasses=GreensRelation.getHValues(dias[answerChoosingAutomata],inputLength, expandSearch.isSelected());
+            List<List<String>> HClasses=GreenRelations.getHValues(dias[answerChoosingAutomata],inputLength, expandSearch.isSelected());
             if(!isInterrupted){
                 if(!HClasses.isEmpty()){
                     textArea.setText("");

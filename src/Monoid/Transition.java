@@ -17,19 +17,18 @@ public class Transition {
     List<Integer> infiniteCases;
 
     public Transition(int amounthOfElements, List<TransferFunction> transitionFunctions){
-        Transform(amounthOfElements, transitionFunctions);
-        this.infiniteCases=new ArrayList<>();
+        Transform(amounthOfElements, transitionFunctions, new ArrayList<>());
     }
 
     public Transition(int amounthOfElements, List<TransferFunction> transitionFunctions,List<Integer> infiniteCases){
-        Transform(amounthOfElements, transitionFunctions);
-        this.infiniteCases=infiniteCases;
+        Transform(amounthOfElements, transitionFunctions, infiniteCases);
     }
 
     //This functions initialises the image and kern value throw inputting transfer functions
-    private void Transform(int amounthOfElements, List<TransferFunction> transitionFunctions){
+    private void Transform(int amounthOfElements, List<TransferFunction> transitionFunctions,
+                           List<Integer> infiniteCases){
         this.amounthOfElements=amounthOfElements;
-        this.infiniteCases=new ArrayList<>();
+        this.infiniteCases=infiniteCases;
         List<Integer> contains = new ArrayList<>();
         Image = new int[amounthOfElements];
         Kern = new List[amounthOfElements];
@@ -45,6 +44,9 @@ public class Transition {
                 throw new NullPointerException("Only one Function with same StartID");
             }
             contains.add(transitionFunctions.get(i).getStartStateID());
+            if(infiniteCases.contains(transitionFunctions.get(i).getEndStateID())){
+                Image[i]=-1;
+            }
             Image[i]= transitionFunctions.get(i).getEndStateID();
             try{
                 Kern[transitionFunctions.get(i).getEndStateID()].add(transitionFunctions.get(i).getStartStateID());
