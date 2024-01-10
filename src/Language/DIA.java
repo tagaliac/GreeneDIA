@@ -73,7 +73,7 @@ public class DIA extends DEA{
             temp = result.copy();
             temp2=getTransitionWithOneChar(word.charAt(i+1));
             for(int j=0;j< result.getImage().length;j++){
-                if(temp.getImage()[j]==-1){
+                if(temp.getImage()[j]==-1||temp2.getImage()[j]==-1){
                     result.setImage(-1,j);
                 }else{
                     result.setImage(temp2.getImage()[temp.getImage()[j]],j);

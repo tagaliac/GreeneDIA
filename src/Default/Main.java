@@ -123,7 +123,7 @@ public class Main {
             transferFunctions.add(new TransferFunction(i,'b',i-1));
         }
 
-        //transferFunctions.add(new TransferFunction(length+2,'a',length+3));
+        transferFunctions.add(new TransferFunction(length+2,'a',length+2));
         transferFunctions.add(new TransferFunction(length+2,'b',length+1));
 
         //define final states

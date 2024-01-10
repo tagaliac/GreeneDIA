@@ -7,12 +7,19 @@ import java.util.Comparator;
 import java.util.List;
 
 public class GreenRelations {
-    private static boolean isR_Related(String word1, String word2, DIA dia, List<String> submonoid){
+    private static boolean isR_Related(String word1, String word2, DIA dia, int maxLength, boolean expandSearch){
         boolean isLeft=false,isRight=false;
         boolean found;
         Transition word1Morphism= dia.getTransitionWithString(word1);
         Transition word2Morphism= dia.getTransitionWithString(word2);
         Transition compare;
+        List<String> submonoid;
+        if(expandSearch){
+            submonoid= Equals.convertAlphabet(dia, maxLength*2);
+        }else {
+            submonoid= Equals.convertAlphabet(dia, maxLength);
+        }
+        submonoid.sort(Comparator.comparingInt(String::length));
         for(String element:submonoid){
             compare=dia.getTransitionWithString(word2+element);
             found=true;
@@ -54,12 +61,19 @@ public class GreenRelations {
         return isLeft&&isRight;
     }
 
-    private static boolean isL_Related(String word1, String word2, DIA dia, List<String> submonoid){
+    private static boolean isL_Related(String word1, String word2, DIA dia, int maxLength, boolean expandSearch){
         boolean isLeft=false,isRight=false;
         boolean found;
         Transition word1Morphism= dia.getTransitionWithString(word1);
         Transition word2Morphism= dia.getTransitionWithString(word2);
         Transition compare;
+        List<String> submonoid;
+        if(expandSearch){
+            submonoid= Equals.convertAlphabet(dia, maxLength*2);
+        }else {
+            submonoid= Equals.convertAlphabet(dia, maxLength);
+        }
+        submonoid.sort(Comparator.comparingInt(String::length));
         for(String element:submonoid){
             compare=dia.getTransitionWithString(element+word2);
             found=true;
@@ -125,7 +139,8 @@ public class GreenRelations {
             RPos=0;LPos=0;
             found=false;
             for (int j=0;j< Rlist.size();j++){
-                if((!element.equalsIgnoreCase(Rlist.get(j)))&&isR_Related(element, Rlist.get(j),dia, submonoid)){
+                if((!element.equalsIgnoreCase(Rlist.get(j)))
+                        &&isR_Related(element, Rlist.get(j),dia, maxLength,expandSearch)){
                     found=true;
                     RPos=j;
                     break;
@@ -137,7 +152,8 @@ public class GreenRelations {
             }
             found=false;
             for (int j=0;j< Llist.size();j++){
-                if((!element.equalsIgnoreCase(Llist.get(j)))&&isL_Related(element, Llist.get(j),dia, submonoid)){
+                if((!element.equalsIgnoreCase(Llist.get(j)))
+                        &&isL_Related(element, Llist.get(j),dia, maxLength, expandSearch)){
                     found=true;
                     LPos=j;
                     break;
@@ -179,7 +195,7 @@ public class GreenRelations {
             RPos=0;LPos=0;
             found=false;
             for (int j=0;j< Rlist.size();j++){
-                if(isR_Related(element, Rlist.get(j),dia, submonoid)){
+                if(isR_Related(element, Rlist.get(j),dia, maxLength,expandSearch)){
                     found=true;
                     RPos=j;
                     break;
@@ -191,7 +207,7 @@ public class GreenRelations {
             }
             found=false;
             for (int j=0;j< Llist.size();j++){
-                if(isL_Related(element, Llist.get(j),dia, submonoid)){
+                if(isL_Related(element, Llist.get(j),dia, maxLength,expandSearch)){
                     found=true;
                     LPos=j;
                     break;
@@ -269,8 +285,8 @@ public class GreenRelations {
         for(String element:submonoid){
             newElement=true;
             for(String compare:submonoid){
-                if((!element.equalsIgnoreCase(compare))&&isR_Related(element,compare,dia, submonoid)
-                        &&isL_Related(element,compare,dia, submonoid)){
+                if((!element.equalsIgnoreCase(compare))&&isR_Related(element,compare,dia, maxLength,expandSearch)
+                        &&isL_Related(element,compare,dia, maxLength,expandSearch)){
                     if(newElement){
                         result.add(new ArrayList<>());
                         result.get(result.size()-1).add(element);

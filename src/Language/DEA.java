@@ -27,7 +27,7 @@ public class DEA {
             this.states.add(new state(i,alphabet));
         }
         //define alphabet
-        this.alphabet  =alphabet;
+        this.alphabet=alphabet;
         //define transfer functions
         this.InitiateTransferFunctions(amounthOfStates,alphabet);
         for (TransferFunction transferFunction: TransferFunctions){
