@@ -8,6 +8,7 @@ import Monoid.GreenRelations;
 import Monoid.GreensRelation;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
@@ -21,9 +22,10 @@ public class window {
     private static final DIA[] dias=new DIA[dea_dia.length];
     private static int answerChoosingAutomata,inputLength;
     private static EqualList equal;
-    private static String[][] box;
+    private static List<String[][]> boxes=new ArrayList<>();
     private static boolean isInterrupted=false;
     private static final JCheckBox expandSearch= new JCheckBox("expand search");
+    private static final JSlider slider = new JSlider(SwingConstants.HORIZONTAL);
 
     private static final int DEFAULT_MAX_LENGTH = 5;
     private static final int DEFAULT_LENGTH_1 = 15;
@@ -111,6 +113,24 @@ public class window {
             image.add(btn[i]);
         }
 
+        //sets D-Class choice
+        slider.setBounds(XOFF+(WIDTH-2*XOFF)/8,YOFF+HEIGHT_OF_LINES*4+HEIGHT_OF_LINES/2,(WIDTH-2*XOFF)/8*7,HEIGHT_OF_LINES/2);
+        image.add(slider);
+        JLabel labelDClass =new JLabel("Choice D Class:");
+        labelDClass.setBounds(XOFF,YOFF+HEIGHT_OF_LINES*4+HEIGHT_OF_LINES/2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES/2);
+        image.add(labelDClass);
+        slider.setVisible(false);
+        slider.setMinimum(1);
+        slider.addChangeListener(e ->{
+            textArea.setText("");
+            for (String[] strings: boxes.get(slider.getValue()-1)) {
+                for (String string:strings) {
+                    textArea.append(string + " ");
+                }
+                textArea.append("\n");
+            }
+        });
+
         //sets scrollbar
         JScrollPane scroll = (new JScrollPane(textArea));
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -143,10 +163,12 @@ public class window {
         btn[dea_dia.length+1].addActionListener(e -> timer(()->{
             setInputLength((int)inputMaxLength.getValue());
             setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-            box= GreenRelations.getGreenBoxWithoutEqual(dias[answerChoosingAutomata], inputLength, expandSearch.isSelected());
+            boxes= GreensRelation.getGreenBox(dias[answerChoosingAutomata], inputLength, expandSearch.isSelected());
             if(!isInterrupted){
+                slider.setMaximum(boxes.size());
+                slider.setVisible(boxes.size()>1);
                 textArea.setText("");
-                for (String[] strings:box) {
+                for (String[] strings: boxes.get(0)) {
                     for (String string:strings) {
                         textArea.append(string + " ");
                     }
@@ -164,7 +186,7 @@ public class window {
         btn[dea_dia.length+2].addActionListener(event -> timer(()->{
             setInputLength((int)inputMaxLength.getValue());
             setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-            List<List<String>> HClasses=GreenRelations.getHValues(dias[answerChoosingAutomata],inputLength, expandSearch.isSelected());
+            List<List<String>> HClasses=GreensRelation.getHValues(dias[answerChoosingAutomata],inputLength, expandSearch.isSelected());
             if(!isInterrupted){
                 if(!HClasses.isEmpty()){
                     textArea.setText("");

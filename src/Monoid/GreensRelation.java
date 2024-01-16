@@ -164,23 +164,31 @@ public class GreensRelation {
 
     //Returns the Green Box of the "dia" with the maximum length "maxLength"
     //The results are saved as an array-matrix of strings
-    public static String[][] getGreenBox(DIA dia, int maxLength, boolean expandSearch){
+    public static List<String[][]> getGreenBox(DIA dia, int maxLength, boolean expandSearch){
         //gets and modifies all important variables
         List<String> submonoid= Equals.convertAlphabet(dia, maxLength);
         submonoid.sort(Comparator.comparingInt(String::length));
         EqualList equal=Equals.findEquals(dia, maxLength, expandSearch);
+        submonoid=removeEqualsFromMonoid(submonoid,equal);
+        List<String[][]> resultlist =splitInDClasses(createBox(submonoid,equal),equal);
+        for(String[][] box:resultlist){
+            fitValuesOfGreenBox(box,maxLength);
+        }
+        return resultlist;
+    }
+
+    private static String[][] createBox(List<String> submonoid, EqualList equal){
         String[][] result=new String[submonoid.size()][submonoid.size()];
+        submonoid.sort(Comparator.comparingInt(String::length));
         List<String> Rlist=new ArrayList<>();
         List<String> Llist=new ArrayList<>();
-        Rlist.add("");
-        Llist.add("");
-        result[0][0] = "";
-        submonoid=removeEqualsFromMonoid(submonoid,equal);
+        Rlist.add(submonoid.get(0));
+        Llist.add(submonoid.get(0));
+        result[0][0]=submonoid.get(0);
         boolean found;
         int RPos,LPos;
-        //checks for relations and adds them properly
         for(String element:submonoid){
-            if(element.equalsIgnoreCase("")||element.equalsIgnoreCase(" ")){
+            if(element.equalsIgnoreCase(submonoid.get(0))){
                 continue;
             }
             RPos=0;LPos=0;
@@ -210,10 +218,28 @@ public class GreensRelation {
             }
             result[RPos][LPos]=element;
         }
-        //fits graphically the result-matrix
-        result[0][0]="\u03BB";
-        fitValuesOfGreenBox(result,maxLength);
         return reduceSizeOfGreenBox(result, Rlist.size(), Llist.size());
+    }
+
+    private static List<String[][]> splitInDClasses(String[][] box, EqualList equal){
+        List<String> submonoid1=new ArrayList<>(),submonoid2=new ArrayList<>();
+        List<String[][]> result=new ArrayList<>();
+        for (String[] strings:box) {
+            for (int j=0;j<strings.length;j++) {
+                if (strings[j]!=null&&strings[0]==null&&box[0][j]==null) {
+                    submonoid2.add(strings[j]);
+                } else if (strings[j]!=null) {
+                    submonoid1.add(strings[j]);
+                }
+            }
+        }
+        if(submonoid2.isEmpty()){
+            result.add(box);
+            return result;
+        }
+        result.add(createBox(submonoid1,equal));
+        result.addAll(splitInDClasses(createBox(submonoid2,equal),equal));
+        return result;
     }
 
     //Removes all equal values in "equalList" to reduce the size of the "monoid"
@@ -242,6 +268,9 @@ public class GreensRelation {
 
     //Removes null-entries of "greenbox" with "maxLength" and makes the entries equal long
     private static void fitValuesOfGreenBox(String[][] greenbox, int maxlength){
+        if(greenbox[0][0].equalsIgnoreCase("")){
+            greenbox[0][0]="\u03BB";
+        }
         for(int i=0;i<greenbox.length;i++){
             for(int j=0;j<greenbox[i].length;j++){
                 if(greenbox[i][j]==null){
