@@ -289,18 +289,18 @@ public class Main {
         transferFunctions.add(new TransferFunction(0, 'a', 1));
         transferFunctions.add(new TransferFunction(0, 'b', 0));
 
-        for (int i = 1; i < length - 1; i++) {
-            transferFunctions.add(new TransferFunction(i, 'a', i + 1));
-            transferFunctions.add(new TransferFunction(i, 'b', i - 1));
+        for (int i=1;i<length-1;i++) {
+            transferFunctions.add(new TransferFunction(i, 'a', i+1));
+            transferFunctions.add(new TransferFunction(i, 'b', i-1));
         }
 
-        transferFunctions.add(new TransferFunction(length - 1, 'a', length - 1));
-        transferFunctions.add(new TransferFunction(length - 1, 'b', length - 2));
+        transferFunctions.add(new TransferFunction(length - 1, 'a', length-1));
+        transferFunctions.add(new TransferFunction(length - 1, 'b', length-2));
 
         //define final states
         finalStates.add(0);
 
-        InfiniteStates.add(length - 1);
+        InfiniteStates.add(length-1);
         return new DIA(length, alphabet, transferFunctions, 0, finalStates, InfiniteStates);
     }
 
@@ -308,12 +308,12 @@ public class Main {
     //It exists for testing
     public static void PrintList(List<String> StringList,int sizeOfLine){
         int count=0;
-        for (String s : StringList) {
+        for (String s:StringList) {
             System.out.print(s);
-            if (count >= sizeOfLine) {
-                count = 0;
+            if (count>=sizeOfLine) {
+                count=0;
                 System.out.print("\n");
-            } else {
+            }else{
                 count++;
             }
         }

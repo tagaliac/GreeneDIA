@@ -4,7 +4,6 @@ import Default.Main;
 import Language.DIA;
 import Monoid.EqualList;
 import Monoid.Equals;
-import Monoid.GreenRelations;
 import Monoid.GreensRelation;
 
 import java.awt.Color;
@@ -40,8 +39,8 @@ public class window {
         //set DIAs
         dea_dia[0] = "Dyck";
         dea_dia[1] = "Dyck R";
-        dea_dia[2] = "H And";
-        dea_dia[3] = "H Or";
+        dea_dia[2] = "H +";
+        dea_dia[3] = "H -";
         dea_dia[4] = "Custom";
         setDIAS(DEFAULT_LENGTH_1,DEFAULT_LENGTH_2);
 
