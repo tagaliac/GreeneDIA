@@ -231,7 +231,7 @@ public class window {
     //Defines the DIAs with proper parameters
     private static void setDIAS(int length1, int length2){
         dias[0]= Main.createDyck(setHorizontalLength(length1));
-        dias[1]= Main.createDyckPlus(setHorizontalLength(length1));
+        dias[1]= Main.createDyckR(setHorizontalLength(length1));
         dias[2]= Main.createHAnd(setHorizontalLength(length1),setVerticalLength(length2));
         dias[3]= Main.createHOr(setHorizontalLength(length1),setVerticalLength(length2));
         dias[4]= costumDIA;

@@ -90,7 +90,7 @@ public class Main {
     }
 
 
-    public static DIA createDyckPlus(int length){
+    public static DIA createDyckR(int length){
         if(length<3){
             throw new IndexOutOfBoundsException("length must be 3 or higher");
         }
@@ -128,6 +128,7 @@ public class Main {
 
         //define final states
         finalStates.add(3);
+        finalStates.add(1);
 
         //define dia
         List<Integer> InfiniteStates=new ArrayList<>();
