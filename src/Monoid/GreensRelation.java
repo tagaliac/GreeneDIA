@@ -166,7 +166,7 @@ public class GreensRelation {
     //The results are saved as an array-matrix of strings
     public static List<String[][]> getGreenBox(DIA dia, int maxLength, boolean expandSearch){
         //gets and modifies all important variables
-        List<String> submonoid= Equals.convertAlphabet(dia, maxLength);
+        List<String> submonoid= Submonoid.convertAlphabet(dia, maxLength);
         submonoid.sort(Comparator.comparingInt(String::length));
         EqualList equal=Equals.findEquals(dia, maxLength, expandSearch);
         submonoid=removeEqualsFromMonoid(submonoid,equal);
@@ -295,7 +295,7 @@ public class GreensRelation {
     //Each element of a sublist ist H-Related to the others
     public static List<List<String>> getHValues(DIA dia, int maxLength, boolean expandSearch){
         List<List<String>> result=new ArrayList<>();
-        List<String> submonoid= Equals.convertAlphabet(dia, maxLength);
+        List<String> submonoid= Submonoid.convertAlphabet(dia, maxLength);
         EqualList equal=Equals.findEquals(dia, maxLength, expandSearch);
         submonoid=removeEqualsFromMonoid(submonoid,equal);
         submonoid.sort(Comparator.comparingInt(String::length));

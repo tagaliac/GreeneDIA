@@ -79,7 +79,7 @@ public class window {
 
         //set duration timer
         JFormattedTextField duration;
-        JLabel labelDuration = new JLabel("Duration of test:");
+        JLabel labelDuration = new JLabel("Duration of Test:");
         duration = new JFormattedTextField(DEFAULT_MAX_SLEEPING_DURATION);
         labelDuration.setBounds(XOFF+(WIDTH-2*XOFF)/8*6,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES/2);
         duration.setBounds(XOFF+(WIDTH-2*XOFF)/8*7,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES/2);
@@ -115,7 +115,7 @@ public class window {
         //sets D-Class choice
         slider.setBounds(XOFF+(WIDTH-2*XOFF)/8,YOFF+HEIGHT_OF_LINES*4+HEIGHT_OF_LINES/2,(WIDTH-2*XOFF)/8*7,HEIGHT_OF_LINES/2);
         image.add(slider);
-        JLabel labelDClass =new JLabel("Choice D Class:");
+        JLabel labelDClass =new JLabel("Choose D Class:");
         labelDClass.setBounds(XOFF,YOFF+HEIGHT_OF_LINES*4+HEIGHT_OF_LINES/2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES/2);
         image.add(labelDClass);
         slider.setVisible(false);
