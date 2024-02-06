@@ -7,33 +7,35 @@ import javax.swing.*;
 import java.awt.*;
 
 public class EqualChoiceWindow {
-    private static final JFrame image=new JFrame("Choose Equal");
+    private static JFrame image;
     private static final int WIDTH=500,HEIGHT=500,XOFF=50,YOFF=50, HEIGHT_OF_LINES = 50;
-    private static final Label[] basicInfo =new Label[2];
-    private static final JButton[] btn=new JButton[2];
+    private static Label[] basicInfo;
+    private static DIA dia;
     private static boolean isInterrupted;
-    private static Thread exeThread, waitThread;
 
-    public static void setWindow(int IDofDIA, DIA dia){
+    public static void setWindow(){
         //define image
+        image=new JFrame("Choose Equal");
         image.setSize(WIDTH, HEIGHT);
-        image.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        image.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         image.getContentPane().setBackground(Color.white);
         image.setLayout(null);
         image.setLocationRelativeTo(null);
-        isInterrupted=false;
+        basicInfo=new Label[2];
         for (int i=0;i<basicInfo.length;i++) {
             basicInfo[i]=new Label();
             image.add(basicInfo[i]);
         }
-        for(int i=0;i<btn.length;i++){
+        JButton[] btn = new JButton[2];
+        for(int i = 0; i< btn.length; i++){
             btn[0]=new JButton("Check");
             btn[1]=new JButton("Close");
         }
+        dia=window.dias[window.answerChoosingAutomata];
 
         //set basic info
         basicInfo[0].setBounds(XOFF,YOFF,(WIDTH-2*XOFF),HEIGHT_OF_LINES);
-        basicInfo[0].setText("The chosen automata is: "+IDofDIA_to_String(IDofDIA));
+        basicInfo[0].setText("The chosen automata is: "+IDofDIA_to_String(window.answerChoosingAutomata));
         basicInfo[1].setBounds(XOFF,YOFF+HEIGHT_OF_LINES*4,(WIDTH-2*XOFF),HEIGHT_OF_LINES);
         basicInfo[1].setText("");
 
@@ -68,26 +70,28 @@ public class EqualChoiceWindow {
             String rightWord=(String) rightWordField.getValue();
             boolean check=true;
             int resultCode=0;
-                for(int i=0;i<leftWord.length();i++){
-                    if(!dia.getAlphabet().contains(leftWord.charAt(i))){
-                        resultCode=1;
-                        check=false;
-                    }
+            for(int i=0;i<leftWord.length();i++){
+                if (!dia.getAlphabet().contains(leftWord.charAt(i))) {
+                    resultCode=1;
+                    check=false;
+                    break;
                 }
-                for(int i=0;i<rightWord.length();i++){
-                    if(!dia.getAlphabet().contains(rightWord.charAt(i))){
-                        resultCode=1;
-                        check=false;
-                    }
+            }
+            for(int i=0;i<rightWord.length();i++){
+                if(!dia.getAlphabet().contains(rightWord.charAt(i))){
+                    resultCode=1;
+                    check=false;
+                    break;
                 }
-                if(check){
-                    if(Equals.isEqual(leftWord,rightWord,dia)){
-                        resultCode=2;
+            }
+            if(check){
+                if(Equals.isEqual(leftWord,rightWord,dia)){
+                    resultCode=2;
 
-                    }else{
-                        resultCode=3;
-                    }
+                }else{
+                    resultCode=3;
                 }
+            }
             if(!isInterrupted){
                 switch (resultCode) {
                     case 1 -> basicInfo[1].setText("word has letters that aren't in DIA");
@@ -105,12 +109,7 @@ public class EqualChoiceWindow {
 
         //set close button
         btn[1].setBounds(XOFF+(WIDTH-2*XOFF)/2,YOFF+HEIGHT_OF_LINES*2,(WIDTH-2*XOFF)/2,HEIGHT_OF_LINES);
-        btn[1].addActionListener(e ->{
-            waitThread.interrupt();
-            exeThread.interrupt();
-            isInterrupted=false;
-            image.dispose();
-        });
+        btn[1].addActionListener(e -> image.dispose());
         image.add(btn[1]);
         image.setVisible(true);
     }
@@ -136,8 +135,8 @@ public class EqualChoiceWindow {
     //Starts the action "runnable" for a duration of "timeInMilliSecond"
     //To fully interrupt an action, the action must use the "isInterrupt"-Variable
     private static void timer(Runnable runnable, int timeInMilliSeconds){
-        exeThread=new Thread(runnable);
-        waitThread=new Thread(()->{
+        Thread exeThread = new Thread(runnable);
+        Thread waitThread = new Thread(() -> {
             try {
                 Thread.sleep(timeInMilliSeconds);
             } catch (InterruptedException ex) {
@@ -146,7 +145,7 @@ public class EqualChoiceWindow {
         });
         waitThread.start();
         exeThread.start();
-        while (exeThread.isAlive()&&waitThread.isAlive()){}
+        while (exeThread.isAlive()&& waitThread.isAlive()){}
         if(waitThread.isAlive()){
             waitThread.interrupt();
         }else {

@@ -18,8 +18,8 @@ public class window {
     private static final JTextField[] extrainformation=new JTextField[3];
     private static final String[] dea_dia = new String[5];
     public static JButton[] btn=new JButton[dea_dia.length+4];
-    private static final DIA[] dias=new DIA[dea_dia.length];
-    private static int answerChoosingAutomata,inputLength;
+    protected static final DIA[] dias=new DIA[dea_dia.length];
+    protected static int answerChoosingAutomata,inputLength;
     private static EqualList equal;
     private static List<String[][]> boxes=new ArrayList<>();
     private static boolean isInterrupted=false;
@@ -211,7 +211,7 @@ public class window {
         btn[dea_dia.length+3]=new JButton("Choose Equal");
         btn[dea_dia.length+3].setBounds(XOFF+(WIDTH-2*XOFF)/4*3,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/4,HEIGHT_OF_LINES);
         btn[dea_dia.length+3].addActionListener(e -> timer(()->{
-           EqualChoiceWindow.setWindow(answerChoosingAutomata,dias[answerChoosingAutomata]);
+           EqualChoiceWindow.setWindow();
         },(int)duration.getValue()*1000));
         image.add(btn[dea_dia.length+3]);
 

@@ -25,7 +25,7 @@ public class DIAChoiceWindow {
     public static void setImage(){
         //define image
         image.setSize(WIDTH, HEIGHT);
-        image.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        image.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         image.getContentPane().setBackground(Color.white);
         image.setLayout(null);
         image.setLocationRelativeTo(null);
