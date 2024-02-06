@@ -17,7 +17,7 @@ public class window {
     private static final JTextArea textArea=new JTextArea();
     private static final JTextField[] extrainformation=new JTextField[3];
     private static final String[] dea_dia = new String[5];
-    public static JButton[] btn=new JButton[dea_dia.length+3];
+    public static JButton[] btn=new JButton[dea_dia.length+4];
     private static final DIA[] dias=new DIA[dea_dia.length];
     private static int answerChoosingAutomata,inputLength;
     private static EqualList equal;
@@ -140,7 +140,7 @@ public class window {
 
         //sets equal-button
         btn[dea_dia.length]=new JButton("Equals");
-        btn[dea_dia.length].setBounds(XOFF,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/3,HEIGHT_OF_LINES);
+        btn[dea_dia.length].setBounds(XOFF,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/4,HEIGHT_OF_LINES);
         btn[dea_dia.length].addActionListener(e -> timer(()->{
             setInputLength((int)inputMaxLength.getValue());
             setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
@@ -158,7 +158,7 @@ public class window {
 
         //sets box-button
         btn[dea_dia.length+1]=new JButton("Green's Box");
-        btn[dea_dia.length+1].setBounds(XOFF+(WIDTH-2*XOFF)/3,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/3,HEIGHT_OF_LINES);
+        btn[dea_dia.length+1].setBounds(XOFF+(WIDTH-2*XOFF)/4,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/4,HEIGHT_OF_LINES);
         btn[dea_dia.length+1].addActionListener(e -> timer(()->{
             setInputLength((int)inputMaxLength.getValue());
             setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
@@ -181,7 +181,7 @@ public class window {
 
         //sets H-CLass-button
         btn[dea_dia.length+2]=new JButton("H Class");
-        btn[dea_dia.length+2].setBounds(XOFF+(WIDTH-2*XOFF)/3*2,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/3,HEIGHT_OF_LINES);
+        btn[dea_dia.length+2].setBounds(XOFF+(WIDTH-2*XOFF)/4*2,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/4,HEIGHT_OF_LINES);
         btn[dea_dia.length+2].addActionListener(event -> timer(()->{
             setInputLength((int)inputMaxLength.getValue());
             setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
@@ -206,6 +206,14 @@ public class window {
             }
         },(int)duration.getValue()*1000));
         image.add(btn[dea_dia.length+2]);
+
+        //sets chooseEqual-button
+        btn[dea_dia.length+3]=new JButton("Choose Equal");
+        btn[dea_dia.length+3].setBounds(XOFF+(WIDTH-2*XOFF)/4*3,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/4,HEIGHT_OF_LINES);
+        btn[dea_dia.length+3].addActionListener(e -> timer(()->{
+           EqualChoiceWindow.setWindow(answerChoosingAutomata,dias[answerChoosingAutomata]);
+        },(int)duration.getValue()*1000));
+        image.add(btn[dea_dia.length+3]);
 
         //sets background image
         Draw draw = new Draw();

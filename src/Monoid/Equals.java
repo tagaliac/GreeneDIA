@@ -76,6 +76,23 @@ public class Equals {
         return result;
     }
 
+    public static boolean isEqual(String word1, String word2, DIA dia){
+        Transition word1transition= dia.getTransitionWithString(word1);
+        Transition word2transition= dia.getTransitionWithString(word2);
+        if((word1transition.getImage().length!=word2transition.getImage().length)||
+                ((word1transition.getImage().length-word1transition.getInfiniteCases().size())<=0)||
+                ((word2transition.getImage().length-word2transition.getInfiniteCases().size())<=0)){
+            return false;
+        }
+        for (int j=0; j<word1transition.getImage().length; j++) {
+            if ((word1transition.getImage()[j]!=-1)&&(word2transition.getImage()[j]!=-1)
+                    &&(word1transition.getImage()[j]!=word2transition.getImage()[j])){
+                return false;
+            }
+        }
+        return true;
+    }
+
     //Removes obsolet entries in EqualList "equal"
     //the function has to eventually repeated multiple times to be return the correct value
     //--times defines how often that has to be
