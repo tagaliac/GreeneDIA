@@ -170,7 +170,7 @@ public class GreensRelation {
         submonoid=removeEqualsFromMonoid(submonoid,equal);
         List<String[][]> resultlist;
         if(fill){
-            resultlist =splitInDClassesAndFill(createBox(submonoid,equal),equal,dia,maxLength);
+            resultlist =splitInDClassesAndFill(createBox(submonoid,equal),equal);
         }else{
             resultlist =splitInDClasses(createBox(submonoid,equal),equal);
         }
@@ -224,54 +224,36 @@ public class GreensRelation {
         return reduceSizeOfGreenBox(result, Rlist.size(), Llist.size());
     }
 
-    private static List<String[][]> splitInDClassesAndFill(String[][] box, EqualList equal,DIA dia, int length){
+    private static List<String[][]> splitInDClassesAndFill(String[][] box, EqualList equal){
         List<String[][]> result=splitInDClasses(box,equal);
-        int currentLength=length;
-        List<String> newSubmonoid,newWords=new ArrayList<>();
-        boolean found;
-        do{
-            found=false;
-            currentLength++;
-            newSubmonoid= Submonoid.createAndConvertSubmonoidSameLength(dia.getAlphabet(),currentLength);
-            for (String word : removeEqualsFromMonoid(newSubmonoid, equal)) {
-                if(word.length()==currentLength){
-                    newWords.add(word);
-                }
-            }
-            for(String[][] eggbox:result){
-                for(int i=0;i<eggbox.length;i++){
-                    for (int j=0;j<eggbox[i].length;j++){
-                        if(eggbox[i][j]==null){
-                            for (String word:newWords){
-                                if((eggbox[i][0]==null||isR_Related(word,eggbox[i][0],equal))
-                                    &&(eggbox[0][j]==null||isL_Related(word,eggbox[0][j],equal))){
-                                    eggbox[i][j]=word;
-                                    newWords.remove(word);
-                                    found=true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }while(found);
+        int i_x,j_x,lengthOfBiggestWord=1;
         //if words are too big to check
         for(String[][] eggbox:result){
             for(int i=0;i<eggbox.length;i++){
                 for (int j=0;j<eggbox[i].length;j++){
                     if(eggbox[i][j]==null){
-                        if(eggbox[i][0]!=null&&eggbox[0][j]!=null){
-                            eggbox[i][j]= (removeEqualsFromMonoid(
-                                    new ArrayList<String>(Collections.singleton(eggbox[i][0] + eggbox[0][j])),
-                                    equal)).get(0);
+                        for(i_x=0;i_x<eggbox.length;i_x++){
+                            if(eggbox[i][i_x]!=null){
+                                break;
+                            }
                         }
+                        for(j_x=0;j_x<eggbox.length;j_x++){
+                            if(eggbox[j_x][j]!=null){
+                                break;
+                            }
+                        }
+                        eggbox[i][j]= (removeEqualsFromMonoid(
+                                new ArrayList<>(Collections.singleton(eggbox[i][i_x] + eggbox[j_x][j])),
+                                equal)).get(0);
+                        }
+                    if(eggbox[i][j].length()>lengthOfBiggestWord){
+                        lengthOfBiggestWord=eggbox[i][j].length();
                     }
                 }
             }
         }
         for(String[][] eggbox:result){
-            fitValuesOfGreenBox(eggbox,currentLength-1);
+            fitValuesOfGreenBox(eggbox,lengthOfBiggestWord);
         }
         return result;
     }
