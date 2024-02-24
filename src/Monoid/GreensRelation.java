@@ -170,7 +170,7 @@ public class GreensRelation {
         submonoid=removeEqualsFromMonoid(submonoid,equal);
         List<String[][]> resultlist;
         if(fill){
-            resultlist =splitInDClassesAndFill(createBox(submonoid,equal),equal);
+            resultlist =splitInDClassesAndFill(createBox(submonoid,equal),equal,dia,maxLength);
         }else{
             resultlist =splitInDClasses(createBox(submonoid,equal),equal);
         }
@@ -224,52 +224,92 @@ public class GreensRelation {
         return reduceSizeOfGreenBox(result, Rlist.size(), Llist.size());
     }
 
-    private static List<String[][]> splitInDClassesAndFill(String[][] box, EqualList equal){
+    private static List<String[][]> splitInDClassesAndFill(String[][] box, EqualList equal,DIA dia, int length){
         List<String[][]> result=splitInDClasses(box,equal);
-        int i_x=0,j_x=0,lengthOfBiggestWord=1;
-        boolean lineOfWords;
+        int currentLength=length,x=0;
+        int[] i_x=new int[result.size()],j_x=new int[result.size()];
+        List<String> newSubmonoid,newWords=new ArrayList<>();
+        boolean found, lineOfWords;
+        for(String[][] eggbox:result) {
+            for (int i = 0; i < eggbox.length; i++) {
+                lineOfWords = true;
+                for (int j = 0; j < eggbox[i].length; j++) {
+                    if (eggbox[i][j] == null) {
+                        lineOfWords = false;
+                        break;
+                    }
+                }
+                if (lineOfWords) {
+                    i_x[x] = i;
+                    break;
+                }
+            }
+
+            for (int j = 0; j < eggbox[0].length; j++) {
+                lineOfWords = true;
+                for (int i = 0; i < eggbox.length; i++) {
+                    if (eggbox[i][j] == null) {
+                        lineOfWords = false;
+                        break;
+                    }
+                }
+                if (lineOfWords) {
+                    j_x[x] = j;
+                    break;
+                }
+            }
+            x++;
+        }
+        do{
+            found=false;
+            currentLength++;
+            newSubmonoid= Submonoid.createAndConvertSubmonoidSameLength(dia.getAlphabet(),currentLength);
+            for (String word : removeEqualsFromMonoid(newSubmonoid, equal)) {
+                if(word.length()==currentLength){
+                    newWords.add(word);
+                }
+            }
+            x=0;
+            for(String[][] eggbox:result){
+                for(int i=0;i<eggbox.length;i++){
+                    for (int j=0;j<eggbox[i].length;j++){
+                        if(eggbox[i][j]==null){
+                            for (String word:newWords){
+                                if((eggbox[i][j_x[x]]==null||isR_Related(word,eggbox[i][j_x[x]],equal))
+                                        &&(eggbox[i_x[x]][j]==null||isL_Related(word,eggbox[i_x[x]][j],equal))){
+                                    eggbox[i][j]=word;
+                                    newWords.remove(word);
+                                    found=true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                x++;
+            }
+        }while(found);
+        //if words are too big to check
+        x=0;
         for(String[][] eggbox:result){
-            for(int i=0;i<eggbox.length;i++) {
-                lineOfWords=true;
-                for (int j=0;j<eggbox[i].length;j++){
-                    if(eggbox[i][j]==null){
-                        lineOfWords=false;
-                        break;
-                    }
-                }
-                if(lineOfWords){
-                    i_x=i;
-                    break;
-                }
-            }
-            for(int j=0;j<eggbox[0].length;j++) {
-                lineOfWords=true;
-                for (int i=0;i<eggbox.length;i++){
-                    if(eggbox[i][j]==null){
-                        lineOfWords=false;
-                        break;
-                    }
-                }
-                if(lineOfWords){
-                    j_x=j;
-                    break;
-                }
-            }
             for(int i=0;i<eggbox.length;i++){
                 for (int j=0;j<eggbox[i].length;j++){
                     if(eggbox[i][j]==null){
-                        eggbox[i][j]= (removeEqualsFromMonoid(
-                                new ArrayList<>(Collections.singleton(eggbox[i][j_x] + eggbox[i_x][j])),
-                                equal)).get(0);
+                        if(eggbox[i][j_x[x]]!=null&&eggbox[i_x[x]][j]!=null){
+                            eggbox[i][j]= (removeEqualsFromMonoid(
+                                    new ArrayList<>(Collections.singleton(eggbox[i][j_x[x]] + eggbox[i_x[x]][j])),
+                                    equal)).get(0);
                         }
-                    if(eggbox[i][j].length()>lengthOfBiggestWord){
-                        lengthOfBiggestWord=eggbox[i][j].length();
+                        if(eggbox[i][j].length()>currentLength){
+                            currentLength=eggbox[i][j].length();
+                        }
                     }
                 }
             }
+            x++;
         }
         for(String[][] eggbox:result){
-            fitValuesOfGreenBox(eggbox,lengthOfBiggestWord);
+            fitValuesOfGreenBox(eggbox,currentLength-1);
         }
         return result;
     }

@@ -26,6 +26,23 @@ public class Submonoid {
         return submonoid;
     }
 
+    public static List<String> createAndConvertSubmonoidSameLength(List<Character> alphabet, int wordLength){
+        List<String> result=new ArrayList<>();
+        String word;
+        int[] counter=new int[wordLength];
+        int Size= (int) Math.pow(alphabet.size(), wordLength);
+        Arrays.fill(counter, 1);
+        for(int i=0;i< Size;i++){
+            word = "";
+            for(int position:counter) {
+                word+=alphabet.get(position-1);
+            }
+            result.add(word);
+            counter=raiseCounter(counter,0, alphabet.size(),true);
+        }
+        return result;
+    }
+
     //Raises the counter-array of "createSubmonoid"-function
     private static int[] raiseCounter(int[] counter, int position, int pow, boolean fill){
         if(position>= counter.length){
@@ -74,4 +91,3 @@ public class Submonoid {
         return result;
     }
 }
-
