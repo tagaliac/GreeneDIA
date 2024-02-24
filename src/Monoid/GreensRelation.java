@@ -2,10 +2,7 @@ package Monoid;
 
 import Language.DIA;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Dictionary;
-import java.util.List;
+import java.util.*;
 
 public class GreensRelation {
     //Returns the String "value" in reverse order
@@ -246,8 +243,8 @@ public class GreensRelation {
                     for (int j=0;j<eggbox[i].length;j++){
                         if(eggbox[i][j]==null){
                             for (String word:newWords){
-                                if((eggbox[i][0]!=null&&isR_Related(word,eggbox[i][0],equal))
-                                    ||(eggbox[0][j]!=null&&isL_Related(word,eggbox[0][j],equal))){
+                                if((eggbox[i][0]==null||isR_Related(word,eggbox[i][0],equal))
+                                    &&(eggbox[0][j]==null||isL_Related(word,eggbox[0][j],equal))){
                                     eggbox[i][j]=word;
                                     newWords.remove(word);
                                     found=true;
@@ -258,8 +255,21 @@ public class GreensRelation {
                     }
                 }
             }
-
         }while(found);
+        //if words are too big to check
+        for(String[][] eggbox:result){
+            for(int i=0;i<eggbox.length;i++){
+                for (int j=0;j<eggbox[i].length;j++){
+                    if(eggbox[i][j]==null){
+                        if(eggbox[i][0]!=null&&eggbox[0][j]!=null){
+                            eggbox[i][j]= (removeEqualsFromMonoid(
+                                    new ArrayList<String>(Collections.singleton(eggbox[i][0] + eggbox[0][j])),
+                                    equal)).get(0);
+                        }
+                    }
+                }
+            }
+        }
         for(String[][] eggbox:result){
             fitValuesOfGreenBox(eggbox,currentLength-1);
         }

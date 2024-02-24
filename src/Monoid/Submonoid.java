@@ -30,7 +30,7 @@ public class Submonoid {
         List<String> result=new ArrayList<>();
         String word;
         int[] counter=new int[wordLength];
-        int Size= (int) Math.pow(alphabet.size(), wordLength)-1;
+        int Size= (int) Math.pow(alphabet.size(), wordLength);
         Arrays.fill(counter, 1);
         for(int i=0;i< Size;i++){
             word = "";
