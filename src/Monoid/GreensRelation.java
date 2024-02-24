@@ -4,6 +4,7 @@ import Language.DIA;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Dictionary;
 import java.util.List;
 
 public class GreensRelation {
@@ -164,13 +165,18 @@ public class GreensRelation {
 
     //Returns the Green Box of the "dia" with the maximum length "maxLength"
     //The results are saved as an array-matrix of strings
-    public static List<String[][]> getGreenBox(DIA dia, int maxLength, boolean expandSearch){
+    public static List<String[][]> getGreenBox(DIA dia, int maxLength, boolean expandSearch, boolean fill){
         //gets and modifies all important variables
         List<String> submonoid= Submonoid.convertAlphabet(dia, maxLength);
         submonoid.sort(Comparator.comparingInt(String::length));
         EqualList equal=Equals.findEquals(dia, maxLength, expandSearch);
         submonoid=removeEqualsFromMonoid(submonoid,equal);
-        List<String[][]> resultlist =splitInDClasses(createBox(submonoid,equal),equal);
+        List<String[][]> resultlist;
+        if(fill){
+            resultlist =splitInDClassesAndFill(createBox(submonoid,equal),equal,dia,maxLength);
+        }else{
+            resultlist =splitInDClasses(createBox(submonoid,equal),equal);
+        }
         for(String[][] box:resultlist){
             fitValuesOfGreenBox(box,maxLength);
         }
@@ -219,6 +225,45 @@ public class GreensRelation {
             result[RPos][LPos]=element;
         }
         return reduceSizeOfGreenBox(result, Rlist.size(), Llist.size());
+    }
+
+    private static List<String[][]> splitInDClassesAndFill(String[][] box, EqualList equal,DIA dia, int length){
+        List<String[][]> result=splitInDClasses(box,equal);
+        int currentLength=length;
+        List<String> newSubmonoid,newWords=new ArrayList<>();
+        boolean found;
+        do{
+            found=false;
+            currentLength++;
+            newSubmonoid= Submonoid.createAndConvertSubmonoidSameLength(dia.getAlphabet(),currentLength);
+            for (String word : removeEqualsFromMonoid(newSubmonoid, equal)) {
+                if(word.length()==currentLength){
+                    newWords.add(word);
+                }
+            }
+            for(String[][] eggbox:result){
+                for(int i=0;i<eggbox.length;i++){
+                    for (int j=0;j<eggbox[i].length;j++){
+                        if(eggbox[i][j]==null){
+                            for (String word:newWords){
+                                if((eggbox[i][0]!=null&&isR_Related(word,eggbox[i][0],equal))
+                                    ||(eggbox[0][j]!=null&&isL_Related(word,eggbox[0][j],equal))){
+                                    eggbox[i][j]=word;
+                                    newWords.remove(word);
+                                    found=true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }while(found);
+        for(String[][] eggbox:result){
+            fitValuesOfGreenBox(eggbox,currentLength-1);
+        }
+        return result;
     }
 
     private static List<String[][]> splitInDClasses(String[][] box, EqualList equal){

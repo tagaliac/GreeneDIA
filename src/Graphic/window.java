@@ -24,6 +24,7 @@ public class window {
     private static List<String[][]> boxes=new ArrayList<>();
     private static boolean isInterrupted=false;
     private static final JCheckBox expandSearch= new JCheckBox("expand search");
+    private static final JCheckBox fillBox= new JCheckBox("fill Box");
     private static final JSlider slider = new JSlider(SwingConstants.HORIZONTAL);
 
     private static final int DEFAULT_MAX_LENGTH = 5;
@@ -87,9 +88,14 @@ public class window {
         image.add(labelDuration);
 
         //set expand search
-        expandSearch.setBounds(XOFF+(WIDTH-2*XOFF)/8*6,YOFF+HEIGHT_OF_LINES*2+HEIGHT_OF_LINES/2,(WIDTH-2*XOFF)/8*2,HEIGHT_OF_LINES/2);
+        expandSearch.setBounds(XOFF+(WIDTH-2*XOFF)/8*6,YOFF+HEIGHT_OF_LINES*2+HEIGHT_OF_LINES/2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES/2);
         expandSearch.setSelected(true);
         image.add(expandSearch);
+
+        //set fill Box
+        fillBox.setBounds(XOFF+(WIDTH-2*XOFF)/8*7,YOFF+HEIGHT_OF_LINES*2+HEIGHT_OF_LINES/2,(WIDTH-2*XOFF)/8,HEIGHT_OF_LINES/2);
+        fillBox.setSelected(false);
+        image.add(fillBox);
 
         //set extra information
         for (int i=0;i<extrainformation.length;i++){
@@ -162,7 +168,8 @@ public class window {
         btn[dea_dia.length+1].addActionListener(e -> timer(()->{
             setInputLength((int)inputMaxLength.getValue());
             setDIAS((int)inputLength1.getValue(),(int)inputLength2.getValue());
-            boxes= GreensRelation.getGreenBox(dias[answerChoosingAutomata], inputLength, expandSearch.isSelected());
+            boxes= GreensRelation.getGreenBox(dias[answerChoosingAutomata], inputLength,
+                    expandSearch.isSelected(),fillBox.isSelected());
             if(!isInterrupted){
                 slider.setMaximum(boxes.size());
                 slider.setVisible(boxes.size()>1);
@@ -210,9 +217,7 @@ public class window {
         //sets chooseEqual-button
         btn[dea_dia.length+3]=new JButton("Choose Equal");
         btn[dea_dia.length+3].setBounds(XOFF+(WIDTH-2*XOFF)/4*3,YOFF+HEIGHT_OF_LINES,(WIDTH-2*XOFF)/4,HEIGHT_OF_LINES);
-        btn[dea_dia.length+3].addActionListener(e -> timer(()->{
-           EqualChoiceWindow.setWindow();
-        },(int)duration.getValue()*1000));
+        btn[dea_dia.length+3].addActionListener(e -> timer(EqualChoiceWindow::setWindow,(int)duration.getValue()*1000));
         image.add(btn[dea_dia.length+3]);
 
         //sets background image

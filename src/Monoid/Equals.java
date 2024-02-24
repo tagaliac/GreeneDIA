@@ -76,6 +76,7 @@ public class Equals {
         return result;
     }
 
+    //checks if "word1" and "word2" are equal in "dia"
     public static boolean isEqual(String word1, String word2, DIA dia){
         Transition word1transition= dia.getTransitionWithString(word1);
         Transition word2transition= dia.getTransitionWithString(word2);

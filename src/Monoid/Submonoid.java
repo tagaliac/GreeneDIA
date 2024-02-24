@@ -21,28 +21,45 @@ public class Submonoid {
                     submonoid[i]+=alphabet.get(position-1);
                 }
             }
-            count=raiseCounter(count,0, alphabet.size());
+            count=raiseCounter(count,0, alphabet.size(),false);
         }
         return submonoid;
     }
 
+    public static List<String> createAndConvertSubmonoidSameLength(List<Character> alphabet, int wordLength){
+        List<String> result=new ArrayList<>();
+        String word;
+        int[] counter=new int[wordLength];
+        int Size= (int) Math.pow(alphabet.size(), wordLength)-1;
+        Arrays.fill(counter, 1);
+        for(int i=0;i< Size;i++){
+            word = "";
+            for(int position:counter) {
+                word+=alphabet.get(position-1);
+            }
+            result.add(word);
+            counter=raiseCounter(counter,0, alphabet.size(),true);
+        }
+        return result;
+    }
+
     //Raises the counter-array of "createSubmonoid"-function
-    private static int[] raiseCounter(int[] counter, int position, int pow){
+    private static int[] raiseCounter(int[] counter, int position, int pow, boolean fill){
         if(position>= counter.length){
             //Resets counter
-            Arrays.fill(counter, 0);
+            Arrays.fill(counter, fill?1:0);
             return counter;
         }
         if(counter[position]>=pow){
             if(position>0){
-                counter[position]=0;
+                counter[position]=fill?1:0;
             }
             counter[position]=1;
         }else {
             counter[position]++;
             return counter;
         }
-        return raiseCounter(counter,position+1,pow);
+        return raiseCounter(counter,position+1,pow,fill);
     }
 
     //Returns the subsequence of the word "value" in ["Start";"End"]
