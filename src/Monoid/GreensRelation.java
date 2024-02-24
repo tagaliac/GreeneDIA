@@ -226,24 +226,40 @@ public class GreensRelation {
 
     private static List<String[][]> splitInDClassesAndFill(String[][] box, EqualList equal){
         List<String[][]> result=splitInDClasses(box,equal);
-        int i_x,j_x,lengthOfBiggestWord=1;
-        //if words are too big to check
+        int i_x=0,j_x=0,lengthOfBiggestWord=1;
+        boolean lineOfWords;
         for(String[][] eggbox:result){
+            for(int i=0;i<eggbox.length;i++) {
+                lineOfWords=true;
+                for (int j=0;j<eggbox[i].length;j++){
+                    if(eggbox[i][j]==null){
+                        lineOfWords=false;
+                        break;
+                    }
+                }
+                if(lineOfWords){
+                    i_x=i;
+                    break;
+                }
+            }
+            for(int j=0;j<eggbox[0].length;j++) {
+                lineOfWords=true;
+                for (int i=0;i<eggbox.length;i++){
+                    if(eggbox[i][j]==null){
+                        lineOfWords=false;
+                        break;
+                    }
+                }
+                if(lineOfWords){
+                    j_x=j;
+                    break;
+                }
+            }
             for(int i=0;i<eggbox.length;i++){
                 for (int j=0;j<eggbox[i].length;j++){
                     if(eggbox[i][j]==null){
-                        for(i_x=0;i_x<eggbox.length;i_x++){
-                            if(eggbox[i][i_x]!=null){
-                                break;
-                            }
-                        }
-                        for(j_x=0;j_x<eggbox.length;j_x++){
-                            if(eggbox[j_x][j]!=null){
-                                break;
-                            }
-                        }
                         eggbox[i][j]= (removeEqualsFromMonoid(
-                                new ArrayList<>(Collections.singleton(eggbox[i][i_x] + eggbox[j_x][j])),
+                                new ArrayList<>(Collections.singleton(eggbox[i][j_x] + eggbox[i_x][j])),
                                 equal)).get(0);
                         }
                     if(eggbox[i][j].length()>lengthOfBiggestWord){
